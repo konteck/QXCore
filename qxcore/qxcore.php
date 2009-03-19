@@ -17,13 +17,19 @@
 define('START_TIME', microtime(true));
 
 // Define system varibles
-define('CORE_VER', '0.9');
-
 define('CORE_KEY', true);
+
+define('CORE_PHP_EXT', 'php');
 
 define('CORE_VIEW_EXT', 'html');
 
-$defaultControlName = "Main";
+define('CORE_CNAME', 'Main');
+
+define('CORE_CONFIG', 'app.config');
+
+define('CORE_VER', '0.9');
+
+//$_QXC = NULL;
 
 require_once (CORE_DIR . '/qxcore/ClassDefination.php');
 require_once (CORE_DIR . '/qxcore/Core.Config.php');
@@ -33,15 +39,22 @@ if (! function_exists('pr'))
 	/**
 	 * For debugging purprouses
 	 */
-	function pr($string)
+	function pr($object, $terminate = false)
 	{
-		var_dump($string);
+		echo("<pre>");
+	
+		print_r($object);
+		
+		if ($terminate) 
+		{
+			die("<pre>Exec: " . ET());
+		}		
 	}
 }
 
 function ET()
 {
-	return substr((microtime(true) - START_TIME), 0, 4);
+	return substr((microtime(true) - START_TIME), 0, 6);
 }
 
 /**
@@ -51,21 +64,27 @@ function ET()
  */
 function QXC()
 {
-	global $_QXC;
-	
-	return ($_QXC) ? $_QXC : $_QXC = new QXCore();
+	if (!is_object(QXCore::$_QXC))
+	{ 
+		return new QXCore();
+	}	
+
+	return QXCore::$_QXC;
 }
 
 class QXCore extends ClassDefination
 {
+	public static $_QXC;
 	private $_GLOBALS;
 	
 	function __construct()
 	{
-		global $urlRewrite;
-		
-		parent::unsetVars();
-		
+        global $urlRewrite; // TODO remove
+        
+        parent::unsetVars();    
+        		
+		QXCore::$_QXC = $this;
+				
 		$this->_GLOBALS = array();
 		
 		$this->_GLOBALS['POST'] = $_POST;
@@ -93,8 +112,8 @@ class QXCore extends ClassDefination
 		$this->loadController();
 	}
 	
-	private function __get($name)
-	{
+	function __get($name)
+	{	
 		if (isset($name) && ctype_alnum($name))
 		{
 			$this->loadModule($name);
@@ -120,9 +139,9 @@ class QXCore extends ClassDefination
 	
 	private function loadController()
 	{
-		global $urlRewrite, $defaultControlName;
+		global $urlRewrite;
 		
-		$cName = $defaultControlName;
+		$cName = CORE_CNAME;
 		
 		if ($urlRewrite && !empty($this->_GLOBALS['QSTRING'])) 
 		{
@@ -163,9 +182,7 @@ class QXCore extends ClassDefination
 
 require_once (CORE_DIR . '/qxcore/Controller.php');
 
-/** 
- * @var QXCore 
- */
-$_QXC = new QXCore();
+// Start point
+QXC();
 
 ?>

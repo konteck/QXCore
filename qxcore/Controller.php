@@ -1,8 +1,8 @@
 <?php
 
 class QController extends QXCore
-{
-	public $ModelName = '';
+{	
+	public $ModelName = '';  //TODO: delete this
 	public $ViewName = '';
 	
 	function __construct()
@@ -10,7 +10,7 @@ class QController extends QXCore
 	
 	}
 	
-	private function __get($name)
+	function __get($name)
 	{
 		if (isset($name) && ctype_alnum($name))
 		{			
@@ -21,8 +21,11 @@ class QController extends QXCore
 				case 'view' :
 					$this->$name = $this->loadView();
 					break;
+                case 'user' :
+                    $this->$name = $this->loadExtension($name);
+                    break;					
 				default :
-					$this->$name = $this->loadExtension($name);
+					parent::__get($name);
 					break;
 			}
 			

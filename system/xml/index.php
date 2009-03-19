@@ -2,17 +2,18 @@
 
 class Xml
 {
-	private $tempVar;
-	
-    /**
-     * @return string|array
-     */
-	function part($num = '')
+	/**
+	 * @return object
+	 */
+	public function load($file = '')
 	{
-		$var = QXC()->getPart($num);
-		
-		return $var;
-	}	
+		if (file_exists($file))
+		{
+			$xml = simplexml_load_file($file);
+			
+			return $xml;
+		} // TODO add else statment	
+	}
 }
 
 ?>

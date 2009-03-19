@@ -27,9 +27,9 @@ class QView
 		echo $content;
 	}
 	
-	public function get()
+	public function content()
 	{
-		$content = $this->loadView();
+		$content = (string)$this->loadView();
 		
 		return $content;
 	}
@@ -69,11 +69,11 @@ class QView
 	 * @param string Key of the data 
 	 * @param string Value of the data 
 	 */
-	public function __set($key, $value)
+	function __set($name, $value)
 	{
-		if (! empty($key))
+		if (! empty($name))
 		{
-			$this->varsArray[$key] = $value;
+			$this->varsArray[$name] = $value;
 		}
 	}
 	
@@ -83,14 +83,14 @@ class QView
 	 * @param string $key 
 	 * @return mixed 
 	 */
-	public function __get($key)
+	function __get($name)
 	{
-		return $this->varsArray[$key];
+		return $this->varsArray[$name];
 	}
 	
 	function __toString() 
 	{
-		$this->render();
+		return $this->content();
 	}
 }
 
