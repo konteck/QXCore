@@ -9,7 +9,14 @@ class Xml
 	{
 		if (file_exists($file))
 		{
-			$xml = simplexml_load_file($file);
+			try
+			{
+				$xml = simplexml_load_file($file);
+			}
+			catch (Exception $e)
+			{
+				echo "bad xml";
+			}			
 			
 			return $xml;
 		} // TODO add else statment	

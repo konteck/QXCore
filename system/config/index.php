@@ -24,9 +24,9 @@ class Config
 			$this->loadConfig();
 		}
 		
-		pr($this->configObject, 1);
+//		$c = $this->configObject;
 		
-		return $key;
+		return $this->configObject->$key;
 	}
 	
 	private function loadConfig()
