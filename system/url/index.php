@@ -1,6 +1,6 @@
 <?php
 
-class url
+class QUrl
 {
 	private $tempVar;
 	

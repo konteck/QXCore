@@ -1,6 +1,6 @@
 <?php
 
-class zip
+class QZip
 {
     /**
      * @return QModel Returns QModel

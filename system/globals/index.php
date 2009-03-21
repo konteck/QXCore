@@ -1,6 +1,6 @@
 <?php
 
-class globals
+class QGlobals
 {
 	private $tempVar;
 	
