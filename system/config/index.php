@@ -25,23 +25,16 @@ class QConfig
             $this->loadConfig();
         }
 
-        $titles = $this->configDom->getElementsByTagName($key);
+        $val = QXC()->Xml->GetByTagName($key);
 
-        foreach ($titles as $node)
-        {
-            echo $node->textContent . "\n";
-        }
-
-        pr($titles->item('debug'),1);
-
-        return $this->configDom->$key;
+        return $val[0];
     }
 
     private function loadConfig()
     {
         $cPath = CONFIG_DIR . '/' . $this->configName; // TODO remove
 
-        $this->configDom = $this->Xml->Open($this->configName);
+        $this->configDom = QXC()->Xml->Open($cPath);
     }
 
     function  __call($name, $arguments) {
@@ -51,7 +44,6 @@ class QConfig
     }
     function __get($name)
     {
-        pr($name."|");
         $cPath = APP_DIR . '/config/' . strtolower($name);
 
         if (file_exists($cPath))

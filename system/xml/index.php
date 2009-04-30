@@ -8,7 +8,7 @@ class QXml
 
     public function __construct()
     {
-        $this->Dom = new XmlDom();
+        $this->Dom = new QXmlDom('');
     }
 
     /**
@@ -31,7 +31,26 @@ class QXml
             }
 
             return $this->domObject;
-        } // TODO add else statment
+        }
+        // TODO add else statment
+    }
+
+    public function GetByTagName($name)
+    {
+        $elements = $this->domObject->getElementsByTagName($name);
+
+        if (!is_null($elements) && count($elements) > 0)
+        {
+            $arr = array();
+
+            foreach ($elements as $node)
+            {
+                $arr[] = $node->textContent;
+            }
+
+            return $arr;
+        }
+        // TODo add else
     }
 
     public function XPath($string)
@@ -49,7 +68,7 @@ class QXml
     }
 }
 
-final class XmlDom
+final class QXmlDom
 {
     public function __construct($object)
     {

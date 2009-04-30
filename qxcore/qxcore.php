@@ -33,6 +33,7 @@ define('CORE_VER', '0.92');
 
 require_once (CORE_DIR . '/qxcore/ClassDefination.php');
 require_once (CORE_DIR . '/qxcore/Core.Config.php');
+require_once (CORE_DIR . '/qxcore/xhtml.php');
 
 if (! function_exists('pr'))
 {
