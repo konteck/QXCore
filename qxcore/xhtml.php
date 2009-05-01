@@ -16,6 +16,27 @@ class X {
         return '<input type="submit" ' . $value . ' />';
     }
 
+    public function select($attributes = '')
+    {
+        $value = self::getArray($attributes);
+        
+        if(array_key_exists('option', $value))
+        {
+            var_dump($value);
+
+            foreach ($value['option'] as $key => $val)
+            {
+                $str .= '<option></option>';
+            }
+
+            var_dump($key, $val);
+
+//        $value = self::getAttributes($attributes);
+
+            return '<select type="submit" ' . $value . ' />';
+        }
+    }
+
     public function button($attributes = '')
     {
         $value = self::getAttributes($attributes);
@@ -36,11 +57,11 @@ class X {
         {
             $value = self::getAttributes($attributes);
             
-            echo '<form ' . $value . '>';
+            return '<form ' . $value . '>';
         }
         else
         {
-            echo '</form>';
+            return '</form>';
         }
     }
 
@@ -60,11 +81,7 @@ class X {
 
     private function getAttributes($value)
     {   
-        if (is_string($value))
-        {
-            if(!($value = json_decode("{" . trim($value, "{}") . "}", true)))
-                return false;
-        }
+
         
         if(is_array($value))
         {
@@ -74,6 +91,16 @@ class X {
         }
 
         return false;
+    }
+
+    private function getArray($value)
+    {
+        if (is_string($value))
+        {
+            return QXC()->Json->decode("{" . trim($value, "{}") . "}");
+        }
+
+        return $value;
     }
 }
 
