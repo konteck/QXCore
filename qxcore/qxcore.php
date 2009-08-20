@@ -23,14 +23,15 @@ define('CORE_PHP_EXT', 'php');
 
 define('CORE_VIEW_EXT', 'html');
 
-define('CORE_CNAME', 'Main');
+define('CORE_CONFIG_NAME', 'web');
 
-define('CORE_CONFIG', 'app.config.xml');
+define('CORE_CONFIG_EXTENSION', 'config.xml');
+
+define('CORE_CNAME', 'Main');
 
 define('CORE_VER', '0.92');
 
-//$_QXC = NULL;
-
+require_once (CORE_DIR . '/qxcore/Controller.php');
 require_once (CORE_DIR . '/qxcore/ClassDefination.php');
 require_once (CORE_DIR . '/qxcore/Core.Config.php');
 require_once (CORE_DIR . '/qxcore/xhtml.php');
@@ -52,7 +53,7 @@ if (! function_exists('pr'))
             }
         }
 
-        print_r($object);
+        var_dump($object);
 
         if ($terminate)
         {
@@ -68,29 +69,30 @@ function ET()
 
 /**
  * Get current instance
+ * Alias to QXCore::GetInstance() method
  *
  * @return QXCore Returns QXCore instance
  */
 function QXC()
 {
-    if (!is_object(QXCore::$_QXC))
-    {
-        return new QXCore();
-    }
-
-    return QXCore::$_QXC;
+    return QXCore::GetInstance();
 }
 
 class QXCore
 {
-    public static $_QXC;
+    private static $_QXC;
     private $_GLOBALS;
+
+    public $test = 'test';
+
+    public function test()
+    {
+        return $this->test;
+    }
 
     function __construct()
     {
         global $urlRewrite; // TODO remove
-
-        QXCore::$_QXC = $this;
 
         $this->_GLOBALS = array();
 
@@ -100,53 +102,23 @@ class QXCore
         $this->_GLOBALS['SESSION'] = $_SESSION;
         $this->_GLOBALS['FILES'] = $_FILES;
 
-        if ($urlRewrite === true && ! empty($_GET['qstring']))
+        if ($urlRewrite == true && ! empty($_GET['qstring']))
         {
             $this->_GLOBALS['QSTRING'] = array_map(create_function('$str', 'return (preg_match("/^[a-z0-9\_\-]{1,50}$/", $str))?$str:NULL;'), split("/", $_GET['qstring']));
 
             unset($this->_GLOBALS['GET']['qstring']);
         }
 
-        $_GET = $_POST = $_REQUEST = $_COOKIE = $_SESSION = $_FILES = array();
-
-        unset($_GET);
-        unset($_POST);
-        unset($_COOKIE);
-        unset($_SESSION);
-        unset($_FILES);
-        unset($_REQUEST);
-
-        $this->loadController();
+        $_GET = $_POST = $_REQUEST = $_COOKIE = $_SESSION = $_FILES = array();        
     }
 
-    protected function __get($name)
+    public function Initialize()
     {
-        if (isset($name) && ctype_alnum($name))
-        {
-            $this->loadModule($name);
-
-            $qname = "Q" . $name;
-
-            return $this->$name = new $qname();
-        }
-        else
-        {
-            // TODO Add exception handler
-            return '';
-        }
+        // Load necessary controllers
+        $this->LoadController();
     }
 
-    private function loadModule($name)
-    {
-        $extPath = CORE_DIR . '/system/' . strtolower($name) . '/index.php';
-
-        if (file_exists($extPath))
-        {
-            include_once ($extPath);
-        }
-    }
-
-    private function loadController()
+    public function LoadController()
     {
         global $urlRewrite;
 
@@ -184,14 +156,52 @@ class QXCore
         {
             return $this->_GLOBALS['QSTRING'][$num];
         }
+    }
 
+    public static function GetInstance()
+    {
+        if (!is_object(QXCore::$_QXC))
+        {
+            QXCore::$_QXC = new QXCore();
+        }
+        
+        return QXCore::$_QXC;
+    }
 
+    // Private Methods
+    private function LoadModule($name)
+    {
+        $extPath = CORE_DIR . '/system/' . strtolower($name) . '/index.php';
+
+        if (file_exists($extPath))
+        {
+            include_once ($extPath);
+        }
+    }
+
+    // Magic Methods
+    protected function __get($name)
+    {
+        if (isset($name) && ctype_alnum($name))
+        {
+            $this->LoadModule($name);
+
+            $qname = "Q" . $name;
+
+            $this->$name = new $qname();
+            $this->$name->QXC = $this;
+
+            return $this->$name;
+        }
+        else
+        {
+            // TODO Add exception handler
+            return '';
+        }
     }
 }
 
-require_once (CORE_DIR . '/qxcore/Controller.php');
-
 // Start point
-$qxc = QXC();
+QXC()->Initialize();
 
 ?>

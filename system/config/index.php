@@ -2,9 +2,10 @@
 
 class QConfig
 {
-    public $XPath;
-    private $configName;
+    public $Properties;
+    public $XPath;    
     private $configDom;
+    private $configName = CORE_CONFIG_NAME;
 
     function __construct($name = '')
     {
@@ -12,44 +13,47 @@ class QConfig
         {
             $this->configName = $name;
         }
-        else
-        {
-            $this->configName = CORE_CONFIG;
-        }
     }
 
+    // Public Methods
     public function Get($key)
     {
         if (!is_object($this->configDom))
         {
-            $this->loadConfig();
+            $this->LoadConfig();
         }
 
-        $val = QXC()->Xml->GetByTagName($key);
+        $val = $this->QXC->Xml->GetByTagName($key);
 
         return $val[0];
     }
 
-    private function loadConfig()
+    // Private Methods
+    private function LoadConfig()
     {
-        $cPath = CONFIG_DIR . '/' . $this->configName; // TODO remove
+        $cPath = CONFIG_DIR . '/' . strtolower($this->configName) . "." . CORE_CONFIG_EXTENSION; // TODO remove
 
-        $this->configDom = QXC()->Xml->Open($cPath);
+        $this->configDom = $this->QXC->Xml->Open($cPath);
     }
-
-    function  __call($name, $arguments) {
+    
+    // Magic Methods
+    function  __call($name, $arguments)
+    {
         echo $name, $arguments;
-
-
     }
+    
     function __get($name)
     {
-        $cPath = APP_DIR . '/config/' . strtolower($name);
-
-        if (file_exists($cPath))
+        if (!ctype_alnum($name))
         {
-            $this->$name = new $this($name);
+            // TODO Add  exception throw
         }
+            var_dump($name);
+        $this->$name = new QConfig($name);
+        $this->$name->$name = $this->$name;
+        $this->$name->QXC = $this->QXC;
+
+        return $this->$name;
     }
 }
 

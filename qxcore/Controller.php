@@ -1,8 +1,9 @@
 <?php
 
-/**
-* @property QZip           $Zip
-*/
+/*
+ * @property QZip           $Zip
+ * @property QDb            $Db
+ */
 class QController extends QXCore
 {	
 	public $ModelName = '';  //TODO: delete this
