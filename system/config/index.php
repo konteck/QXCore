@@ -3,8 +3,7 @@
 class QConfig
 {
     public $Properties;
-    public $XPath;    
-    private $configDom;
+    private $xmlObject;
     private $configName = CORE_CONFIG_NAME;
 
     function __construct($name = '')
@@ -13,40 +12,58 @@ class QConfig
         {
             $this->configName = $name;
         }
+
+        if (!is_object($this->xmlObject))
+        {
+            $this->LoadConfig();
+        }
     }
 
     // Public Methods
     public function Get($key)
     {
-        if (!is_object($this->configDom))
+        $val = $this->xmlObject->GetByTagName($key);
+
+        switch (trim(strtolower($val[0])))
         {
-            $this->LoadConfig();
+            case "true":
+                return true;
+                break;
+            case "false":
+                return false;
+                break;
+            default:
+                return $val[0];
+                break;
         }
+    }
 
-        $val = $this->QXC->Xml->GetByTagName($key);
+    public function XPath($expression)
+    {
+        $array = $this->xmlObject->XPath($expression);
 
-        return $val[0];
+        return $array[0];
     }
 
     // Private Methods
     private function LoadConfig()
     {
-        $cPath = CONFIG_DIR . '/' . strtolower($this->configName) . "." . CORE_CONFIG_EXTENSION; // TODO remove
+        $cPath = CONFIG_DIR . '/' . strtolower($this->configName) . "." . CORE_CONFIG_EXTENSION;
 
-        $this->configDom = $this->QXC->Xml->Open($cPath);
+        $this->xmlObject = QXC()->Xml->Open($cPath);
     }
-    
+
     // Magic Methods
     function  __call($name, $arguments)
     {
         echo $name, $arguments;
     }
-    
+
     function __get($name)
     {
         if (!ctype_alnum($name))
         {
-            // TODO Add  exception throw
+            // TODO Add exception throw
         }
             var_dump($name);
         $this->$name = new QConfig($name);

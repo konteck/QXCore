@@ -114,6 +114,9 @@ class QXCore
 
     public function Initialize()
     {
+        // Is in Debug mode
+        define("DEBUG", (bool)$this->Config->Get('debug'));
+        
         // Load necessary controllers
         $this->LoadController();
     }

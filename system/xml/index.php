@@ -30,7 +30,7 @@ class QXml
                 echo "bad xml";
             }
 
-            return $this->domObject;
+            return $this;
         }
         // TODO add else statment
     }
@@ -55,15 +55,20 @@ class QXml
 
     public function XPath($string)
     {
-        if (is_object($this->domObject) && ctype_alnum($string))
+        if (is_object($this->domObject) && ctype_print($string))
         {
             $xp = new domXPath($this->domObject);
 
             $q = $xp->query($string);
 
-            foreach ($titles as $node) {
-                return $node->textContent;
+            $tmpArray = array();
+
+            foreach ($q as $node) 
+            {
+                $tmpArray[] = $node->textContent;
             }
+
+            return $tmpArray;;
         }
     }
 }
