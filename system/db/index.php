@@ -4,8 +4,13 @@ class QDb
 {
     public $Driver = "";
     public $Server = "";
+    public $Port = "";
     public $User = "";
     public $Password = "";
+    public $Database = "";
+    public $Connection;
+    
+    private $connObject;
     private $pdoDrivers = array(
         'mysql',
         'mssql',
@@ -26,8 +31,10 @@ class QDb
 
             $this->Driver = $dbArray['driver'];
             $this->Server = $dbArray['server'];
+            $this->Port = $dbArray['port'];
             $this->User = $dbArray['user'];
             $this->Password = $dbArray['password'];
+            $this->Database = $dbArray['database'];
         }
         else
         {
@@ -36,9 +43,61 @@ class QDb
             $this->User = $qxc->Config->Get('user');
             $this->Password = $qxc->Config->Get('password');
         }
+
+        if (class_exists(PDO))
+        {
+            include_once (CORE_DIR . "/system/db/PDOBase.php");
+
+            // Load required driver
+            $driverName = strtolower($this->Driver);
+            $driverPath = CORE_DIR . "/system/db/drivers/{$driverName}/{$driverName}.pdo." . CORE_PHP_EXT;
+
+            if (file_exists($driverPath))
+            {
+                include_once ($driverPath);
+
+                $className = "Q" . $this->Driver . "Driver";
+
+                try
+                {
+                    $this->connObject = new $className();
+                    $this->connObject->Driver = $this->Driver;
+                    $this->connObject->Server = $this->Server;
+                    $this->connObject->User = $this->User;
+                    $this->connObject->Password = $this->Password;
+
+                    $this->Connection = new QDbConnection(&$this->connObject);
+                }
+                catch (PDOException $e)
+                {
+                    pr($e->getMessage()); // TODO write custom exception realization
+                }
+            }
+            else
+            {
+                throw new Exception($message, $code); // TODO write custome realization
+            }
+        }
+        else
+        {
+            // TODO write else realization
+        }
+    }
+
+    // Punblic Methods
+    public function Query($sql)
+    {    
+        var_dump($this->connObject);
+        $this->Connection->Close();
+        var_dump($this->connObject);
+        die;
+        $this->connObject->Query($q, func_get_args());
     }
 
     // Private Methods
+    /**
+     * @return array
+     */
     private function ParseConnectionString($connStr)
     {
         $matchArray = preg_split("/;/", $connStr);
@@ -52,13 +111,32 @@ class QDb
 
         return $tmpArray;
     }
+}
 
-/**
- * @return QModel Returns QModel
- */
-    function archive()
+class QDbConnection
+{
+    public $State;
+
+    private $dbObject;
+
+    function __construct($dbObject)
     {
-        echo ok;
+        $this->dbObject = &$dbObject;
+
+        $this->Open();
     }
 
+    public function Open()
+    {
+        $this->dbObject->Initialize();
+
+        $this->State = true;
+    }
+
+    public function Close()
+    {
+        $this->dbObject = null;
+
+        $this->State = false;
+    }
 }
