@@ -9,19 +9,48 @@ abstract class QPDODriverBase extends PDO
     public $Password;
     public $Database;
     public $Encoding;
-    public $Connection;
+    public $Connection;    
+    private $DSN;
+
+    public function Initialize()
+    {
+        $this->DSN = $this->GenerateDSN();
+
+        parent::__construct($this->DSN, $this->User, $this->Password);
+    }
     
-    // Abstract Methods
-    abstract function Initialize();
-    
-    abstract function Connect();
+    public function Connect()
+    {
+        // NULL
+    }
 
     public function Disconnect()
     {
-        //
+        // NULL
     }
 
-    abstract function Clean($sql);
+    public function Query($sql)
+    {
+        $stmt = $this->prepare($sql);
+
+        $args = func_get_args();
+
+        if(is_array($args[1]))
+        {
+            $stmt->execute($args[1]);
+        }
+        else
+        {
+            $stmt->execute();
+        }
+
+        return $stmt->fetchAll();
+    }
+
+    public function Clean($sql)
+    {
+        // NULL
+    }
 
     public function SetEncoding($value = "utf8")
     {
@@ -31,7 +60,7 @@ abstract class QPDODriverBase extends PDO
     /**
      * @return array
      */
-    protected function GenerateConnectionString()
+    protected function GenerateDSN()
     {
         // Generate PHP PDO suitable
         $str = strtolower($this->Driver) . ":";

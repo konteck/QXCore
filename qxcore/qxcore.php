@@ -45,20 +45,24 @@ if (! function_exists('pr'))
     {
         echo("<pre>");
 
-        if (is_array($object))
-        {
-            foreach ($object as $var)
-            {
-                pr($var, false);
-            }
-        }
-
-        var_dump($object);
+//        if (is_array($object))
+//        {
+//            foreach ($object as $var)
+//            {
+//                var_dump($var, false);
+//            }
+//        }
+//        else
+//        {
+            var_dump($object);
+//        }
 
         if ($terminate)
         {
             die("Exec: " . ET());
         }
+
+        echo("</pre>");
     }
 }
 

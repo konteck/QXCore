@@ -2,13 +2,13 @@
 
 class QXml
 {
-    public $Dom;
+//    public $Dom;
     private $domObject;
     private $filePath;
 
     public function __construct()
     {
-        $this->Dom = new QXmlDom('');
+        $this->Dom = new QXmlDom(''); // TODO Remove: unused
     }
 
     /**

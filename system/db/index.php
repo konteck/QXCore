@@ -9,14 +9,10 @@ class QDb
     public $Password = "";
     public $Database = "";
     public $Connection;
+    public $CommandText = "";
+    public $Parameters = array();
     
     private $connObject;
-    private $pdoDrivers = array(
-        'mysql',
-        'mssql',
-        'postgresql',
-        'oracle'
-    );
     
     function __construct()
     {
@@ -40,16 +36,22 @@ class QDb
         {
             $this->Driver = $qxc->Config->Get('driver');
             $this->Server = $qxc->Config->Get('server');
+            $this->Port = $qxc->Config->Get('port');
             $this->User = $qxc->Config->Get('user');
             $this->Password = $qxc->Config->Get('password');
+            $this->Database = $qxc->Config->Get('database');
         }
 
-        if (class_exists(PDO))
+        $driverName = strtolower($this->Driver);
+
+        define("USE_PDO", class_exists(PDO) && in_array(strtolower($this->Driver), PDO::getAvailableDrivers()));
+
+        if (USE_PDO)
         {
             include_once (CORE_DIR . "/system/db/PDOBase.php");
 
             // Load required driver
-            $driverName = strtolower($this->Driver);
+            
             $driverPath = CORE_DIR . "/system/db/drivers/{$driverName}/{$driverName}.pdo." . CORE_PHP_EXT;
 
             if (file_exists($driverPath))
@@ -63,8 +65,10 @@ class QDb
                     $this->connObject = new $className();
                     $this->connObject->Driver = $this->Driver;
                     $this->connObject->Server = $this->Server;
+                    $this->connObject->Port = $this->Server;
                     $this->connObject->User = $this->User;
                     $this->connObject->Password = $this->Password;
+                    $this->connObject->Database = $this->Database;
 
                     $this->Connection = new QDbConnection(&$this->connObject);
                 }
@@ -87,11 +91,22 @@ class QDb
     // Punblic Methods
     public function Query($sql)
     {    
-        var_dump($this->connObject);
-        $this->Connection->Close();
-        var_dump($this->connObject);
-        die;
-        $this->connObject->Query($q, func_get_args());
+        if(func_num_args() > 1)
+        {
+            $args = func_get_args();
+            return $this->connObject->Query($sql, $args[1]);
+        }
+        else
+        {
+            return $this->connObject->Query($sql);
+        }
+    }
+
+    public function ExecuteQuery($sql = "")
+    {
+        $q = (empty ($sql)) ? $this->CommandText : $sql;
+
+        return $this->connObject->Query($q, $this->Parameters);
     }
 
     // Private Methods
@@ -116,7 +131,6 @@ class QDb
 class QDbConnection
 {
     public $State;
-
     private $dbObject;
 
     function __construct($dbObject)
