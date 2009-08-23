@@ -17,6 +17,11 @@ abstract class QPDODriverBase extends PDO
         $this->DSN = $this->GenerateDSN();
 
         parent::__construct($this->DSN, $this->User, $this->Password);
+
+        if (!empty ($this->Encoding))
+        {
+            $this->SetEncoding($this->Encoding);
+        }
     }
     
     public function Connect()

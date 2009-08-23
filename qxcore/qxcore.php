@@ -27,9 +27,11 @@ define('CORE_CONFIG_NAME', 'web');
 
 define('CORE_CONFIG_EXTENSION', 'config.xml');
 
-define('CORE_CNAME', 'Main');
+define('CORE_MAIN_CONTROLLER', 'Main');
 
 define('CORE_VER', '0.92');
+
+//--
 
 require_once (CORE_DIR . '/qxcore/Controller.php');
 require_once (CORE_DIR . '/qxcore/ClassDefination.php');
@@ -129,14 +131,16 @@ class QXCore
     {
         global $urlRewrite;
 
-        $cName = CORE_CNAME;
+        $cName = CORE_MAIN_CONTROLLER;
 
         if ($urlRewrite && !empty($this->_GLOBALS['QSTRING']))
         {
             $cName = $this->getPart(0);
         }
 
-        include_once (APP_DIR . '/controllers/' . trim($cName) . '.' . 'php');
+        $cName = (is_null($cName) || empty ($cName))?CORE_MAIN_CONTROLLER:strtolower(trim($cName));
+
+        include_once (APP_DIR . "/controllers/{$cName}." . CORE_PHP_EXT);
 
         new $cName;
     }
@@ -155,7 +159,7 @@ class QXCore
 
     public function getPart($num)
     {
-        if (empty($num))
+        if (ctype_digit($num))
         {
             return $this->_GLOBALS['QSTRING'];
         }
@@ -210,5 +214,3 @@ class QXCore
 
 // Start point
 QXC()->Initialize();
-
-?>

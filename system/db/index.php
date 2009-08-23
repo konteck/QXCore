@@ -8,6 +8,7 @@ class QDb
     public $User = "";
     public $Password = "";
     public $Database = "";
+    public $Encoding = "";
     public $Connection;
     public $CommandText = "";
     public $Parameters = array();
@@ -31,6 +32,7 @@ class QDb
             $this->User = $dbArray['user'];
             $this->Password = $dbArray['password'];
             $this->Database = $dbArray['database'];
+            $this->Encoding = $dbArray['encoding'];
         }
         else
         {
