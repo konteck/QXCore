@@ -1,8 +1,12 @@
 <?php
 
-/*
+/**
  * @property QZip           $Zip
  * @property QDb            $Db
+ * @property QLog           $Log
+ * @property QXml           $Xml
+ * @property QJson          $Json
+ * @property QView          $View
  */
 class QController extends QXCore
 {	
@@ -45,7 +49,7 @@ class QController extends QXCore
 		
 		if (file_exists($mPath))
 		{
-			require_once (CORE_DIR . '/qxcore/Model.php');
+			include_once (CORE_DIR . '/qxcore/Model.php');
 			include_once ($mPath);
 			
 			$className = $mName . '_Model';
@@ -58,7 +62,7 @@ class QController extends QXCore
 	{
 		$vName = (empty($ViewName) ? get_class($this) : $ViewName);
 		
-		require_once (CORE_DIR . '/qxcore/View.php');
+		include_once (CORE_DIR . '/qxcore/View.php');
 		
 		return new QView($vName);
 	}

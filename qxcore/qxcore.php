@@ -88,6 +88,7 @@ class QXCore
 {
     private static $_QXC;
     private $_GLOBALS;
+    private $queryStringArray = array();
 
     public $test = 'test';
 
@@ -108,11 +109,9 @@ class QXCore
         $this->_GLOBALS['SESSION'] = $_SESSION;
         $this->_GLOBALS['FILES'] = $_FILES;
 
-        if ($urlRewrite == true && ! empty($_GET['qstring']))
+        if ($urlRewrite && !empty($_GET['qstring']))
         {
-            $this->_GLOBALS['QSTRING'] = array_map(create_function('$str', 'return (preg_match("/^[a-z0-9\_\-]{1,50}$/", $str))?$str:NULL;'), split("/", $_GET['qstring']));
-
-            unset($this->_GLOBALS['GET']['qstring']);
+            $this->queryStringArray = array_map(create_function('$str', 'return (preg_match("/^[\w\-\.]{1,50}$/", trim($str)))?$str:NULL;'), split("/", $_GET['qstring']));
         }
 
         $_GET = $_POST = $_REQUEST = $_COOKIE = $_SESSION = $_FILES = array();        
@@ -120,29 +119,68 @@ class QXCore
 
     public function Initialize()
     {
+        $this->Log->Trace('Start Loading: ' . START_TIME);
+        
         // Is in Debug mode
         define("DEBUG", (bool)$this->Config->Get('debug'));
+
+        $qerror = $this->getGlobal('qerror', 'GET');
+
+        if(!empty($qerror))
+        {
+            throw new QWebException((int)$qerror);
+        }
         
         // Load necessary controllers
-        $this->LoadController();
+        $this->loadController();
     }
 
-    public function LoadController()
+    private function loadController()
     {
         global $urlRewrite;
 
-        $cName = CORE_MAIN_CONTROLLER;
-
-        if ($urlRewrite && !empty($this->_GLOBALS['QSTRING']))
+        if ($urlRewrite && (bool)count($this->queryStringArray))
         {
             $cName = $this->getPart(0);
         }
-
+        
         $cName = (is_null($cName) || empty ($cName))?CORE_MAIN_CONTROLLER:strtolower(trim($cName));
 
-        include_once (APP_DIR . "/controllers/{$cName}." . CORE_PHP_EXT);
+        $cFileName = "{$cName}." . CORE_PHP_EXT;
 
-        new $cName;
+        if (file_exists(APP_DIR . "/controllers/{$cFileName}"))
+        {
+            $cPath = APP_DIR . "/controllers/{$cFileName}";
+        }
+        else if(file_exists(CORE_DIR . "/controllers/{$cFileName}"))
+        {
+            $cPath = CORE_DIR . "/controllers/{$cFileName}";
+        }
+        else
+        {
+            throw new QWebException(404);
+        }
+
+        include_once ($cPath);
+
+        $controller = new $cName();
+
+        if(count($this->queryStringArray) > 1)
+        {
+            $methodName = $this->getPart(1);
+
+            if(is_callable(array($controller, $methodName)))
+            {
+                array_shift($this->queryStringArray);
+                array_shift($this->queryStringArray);
+
+                call_user_func_array(array($controller, $methodName), $this->queryStringArray);
+            }
+            else
+            {
+                // TODO write else statement
+            }
+        }
     }
 
     public function getGlobal($key, $globalName)
@@ -159,13 +197,9 @@ class QXCore
 
     public function getPart($num)
     {
-        if (ctype_digit($num))
+        if (is_numeric($num))
         {
-            return $this->_GLOBALS['QSTRING'];
-        }
-        else
-        {
-            return $this->_GLOBALS['QSTRING'][$num];
+            return $this->queryStringArray[$num];
         }
     }
 
@@ -201,6 +235,11 @@ class QXCore
 
             $this->$name = new $qname();
             $this->$name->QXC = $this;
+
+            if(method_exists($this->$name, "Initialize"))
+            {
+                $this->$name->Initialize();
+            }
 
             return $this->$name;
         }

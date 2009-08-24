@@ -15,7 +15,7 @@ class QConfig
 
         if (!is_object($this->xmlObject))
         {
-            $this->LoadConfig();
+            $this->loadConfig();
         }
     }
 
@@ -46,7 +46,7 @@ class QConfig
     }
 
     // Private Methods
-    private function LoadConfig()
+    private function loadConfig()
     {
         $cPath = CONFIG_DIR . '/' . strtolower($this->configName) . "." . CORE_CONFIG_EXTENSION;
 
@@ -66,7 +66,7 @@ class QConfig
             // TODO Add exception throw
         }
             var_dump($name);
-        $this->$name = new QConfig($name);
+        $this->$name = new $this($name);
         $this->$name->$name = $this->$name;
         $this->$name->QXC = $this->QXC;
 

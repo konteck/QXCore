@@ -9,7 +9,7 @@ class QGlobals
 	 */
 	function post($name = '')
 	{
-		$var = QXC()->getGlobal($name, 'POST');
+		$var = $this->QXC->getGlobal($name, 'POST');
 		
 		return $var;
 	}
@@ -19,7 +19,7 @@ class QGlobals
 	 */
 	function get($name = '')
 	{
-		$this->tempVar = QXC()->getGlobal($name, 'GET');
+		$this->tempVar = $this->QXC->getGlobal($name, 'GET');
 		return $this;
 	}
 	
@@ -28,7 +28,7 @@ class QGlobals
 	 */
 	function cookie($name)
 	{
-		$var = QXC()->getGlobal($name, 'COOKIE');
+		$var = $this->QXC->getGlobal($name, 'COOKIE');
 		return $var;
 	}
 	
@@ -37,7 +37,7 @@ class QGlobals
 	 */
 	function session($name)
 	{
-		$var = QXC()->getGlobal($name, 'SESSION');
+		$var = $this->QXC->getGlobal($name, 'SESSION');
 		return $var;
 	}
 	
@@ -46,7 +46,7 @@ class QGlobals
 	 */
 	function files()
 	{
-		$var = QXC()->getGlobal($name, 'FILES');
+		$var = $this->QXC->getGlobal($name, 'FILES');
 		return $var;
 	}
 	
