@@ -6,12 +6,32 @@
         Purpose of the stylesheet follows.
 */
 
-/* 
-   TODO customize this sample style
-   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
-*/
+body {
+    margin: 0;
+    padding: 0;
+}
 
-root { 
-    display: block;
+#header {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    background: transparent url('header-background.jpg') repeat-x scroll center;
+}
+
+.error-center-block {
+    margin: auto;
+    width: 40%;
+    height: 10%;
+    color: #ccc;
+}
+
+.error-center-block h1 {
+    font-size: 100px;
+}
+
+h1 {
+    padding: 0;
+    margin: 5px;
+    font-family:"Georgia","Courier New",Courier,monospace;
 }
 

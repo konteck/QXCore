@@ -1,6 +1,6 @@
 <?php
 
-class QXml
+class QXml extends DOMDocument
 {
 //    public $Dom;
     private $domObject;
@@ -8,6 +8,8 @@ class QXml
 
     public function __construct()
     {
+        parent::__construct();
+        
         $this->Dom = new QXmlDom(''); // TODO Remove: unused
     }
 
@@ -22,7 +24,7 @@ class QXml
         {
             try
             {
-                $this->domObject = new DomDocument();
+                $this->domObject = new $this();
                 $this->domObject->load($file);
             }
             catch (Exception $e)

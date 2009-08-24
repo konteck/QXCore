@@ -31,11 +31,14 @@ define('CORE_MAIN_CONTROLLER', 'Main');
 
 define('CORE_VER', '0.92');
 
+if (!defined('WEB_URL'))
+{
+    define('WEB_URL', '/');
+}
+
 //--
 
 require_once (CORE_DIR . '/qxcore/Controller.php');
-require_once (CORE_DIR . '/qxcore/ClassDefination.php');
-require_once (CORE_DIR . '/qxcore/Core.Config.php');
 require_once (CORE_DIR . '/qxcore/xhtml.php');
 
 if (! function_exists('pr'))
@@ -99,8 +102,6 @@ class QXCore
 
     function __construct()
     {
-        global $urlRewrite; // TODO remove
-
         $this->_GLOBALS = array();
 
         $this->_GLOBALS['POST'] = $_POST;
@@ -109,7 +110,7 @@ class QXCore
         $this->_GLOBALS['SESSION'] = $_SESSION;
         $this->_GLOBALS['FILES'] = $_FILES;
 
-        if ($urlRewrite && !empty($_GET['qstring']))
+        if (!empty($_GET['qstring']))
         {
             $this->queryStringArray = array_map(create_function('$str', 'return (preg_match("/^[\w\-\.]{1,50}$/", trim($str)))?$str:NULL;'), split("/", $_GET['qstring']));
         }
@@ -137,9 +138,7 @@ class QXCore
 
     private function loadController()
     {
-        global $urlRewrite;
-
-        if ($urlRewrite && (bool)count($this->queryStringArray))
+        if ((bool)count($this->queryStringArray))
         {
             $cName = $this->getPart(0);
         }
@@ -148,9 +147,9 @@ class QXCore
 
         $cFileName = "{$cName}." . CORE_PHP_EXT;
 
-        if (file_exists(APP_DIR . "/controllers/{$cFileName}"))
+        if (file_exists(WEB_DIR . "/controllers/{$cFileName}"))
         {
-            $cPath = APP_DIR . "/controllers/{$cFileName}";
+            $cPath = WEB_DIR . "/controllers/{$cFileName}";
         }
         else if(file_exists(CORE_DIR . "/controllers/{$cFileName}"))
         {
@@ -167,19 +166,25 @@ class QXCore
 
         if(count($this->queryStringArray) > 1)
         {
-            $methodName = $this->getPart(1);
+            $methodName = $this->getPart(1);            
+        }
 
-            if(is_callable(array($controller, $methodName)))
-            {
-                array_shift($this->queryStringArray);
-                array_shift($this->queryStringArray);
+        if(!empty($methodName) && is_callable(array($controller, $methodName)))
+        {
+            array_shift($this->queryStringArray);
+            array_shift($this->queryStringArray);
 
-                call_user_func_array(array($controller, $methodName), $this->queryStringArray);
-            }
-            else
-            {
-                // TODO write else statement
-            }
+            call_user_func_array(array($controller, $methodName), $this->queryStringArray);
+        }
+        else if(is_callable(array($controller, "Index")))
+        {
+            array_shift($this->queryStringArray);
+            
+            call_user_func_array(array($controller, "Index"), $this->queryStringArray);
+        }
+        else
+        {
+            // TODO write else statement
         }
     }
 
@@ -205,12 +210,12 @@ class QXCore
 
     public static function GetInstance()
     {
-        if (!is_object(QXCore::$_QXC))
+        if (!self::$_QXC instanceof QXCore)
         {
-            QXCore::$_QXC = new QXCore();
+            self::$_QXC = new self();
         }
         
-        return QXCore::$_QXC;
+        return self::$_QXC;
     }
 
     // Private Methods

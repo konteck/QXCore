@@ -11,6 +11,8 @@ class QView
         {
             $this->viewName = strtolower($name) . '_view';
         }
+
+        $this->varsArray['web_url'] = WEB_URL;
     }
 
     public function Load($name)
@@ -46,9 +48,9 @@ class QView
     {
         $viewName = "{$this->viewName}." . CORE_VIEW_EXT;
 
-        if (file_exists(APP_DIR . "/views/{$viewName}"))
+        if (file_exists(WEB_DIR . "/views/{$viewName}"))
         {
-            $vPath = APP_DIR . "/views/{$viewName}";
+            $vPath = WEB_DIR . "/views/{$viewName}";
         }
         else if(file_exists(CORE_DIR . "/views/{$viewName}"))
         {

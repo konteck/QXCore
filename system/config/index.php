@@ -65,7 +65,7 @@ class QConfig
         {
             // TODO Add exception throw
         }
-            var_dump($name);
+        
         $this->$name = new $this($name);
         $this->$name->$name = $this->$name;
         $this->$name->QXC = $this->QXC;
