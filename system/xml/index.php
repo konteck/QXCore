@@ -8,9 +8,7 @@ class QXml extends DOMDocument
 
     public function __construct()
     {
-        parent::__construct();
-        
-        $this->Dom = new QXmlDom(''); // TODO Remove: unused
+        parent::__construct();        
     }
 
     /**
@@ -52,7 +50,7 @@ class QXml extends DOMDocument
 
             return $arr;
         }
-        // TODo add else
+        // TODO add else
     }
 
     public function XPath($string)
@@ -74,17 +72,3 @@ class QXml extends DOMDocument
         }
     }
 }
-
-final class QXmlDom
-{
-    public function __construct($object)
-    {
-        ;
-    }
-    public function __get($name)
-    {
-        ;
-    }
-}
-
-?>

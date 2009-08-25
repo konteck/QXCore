@@ -56,7 +56,7 @@ class QConfig
     // Magic Methods
     function  __call($name, $arguments)
     {
-        echo $name, $arguments;
+//        echo $name, $arguments;
     }
 
     function __get($name)
@@ -73,5 +73,3 @@ class QConfig
         return $this->$name;
     }
 }
-
-?>

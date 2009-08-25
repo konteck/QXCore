@@ -31,11 +31,6 @@ define('CORE_MAIN_CONTROLLER', 'Main');
 
 define('CORE_VER', '0.92');
 
-if (!defined('WEB_URL'))
-{
-    define('WEB_URL', '/');
-}
-
 //--
 
 require_once (CORE_DIR . '/qxcore/Controller.php');
@@ -50,17 +45,7 @@ if (! function_exists('pr'))
     {
         echo("<pre>");
 
-//        if (is_array($object))
-//        {
-//            foreach ($object as $var)
-//            {
-//                var_dump($var, false);
-//            }
-//        }
-//        else
-//        {
-            var_dump($object);
-//        }
+        var_dump($object);
 
         if ($terminate)
         {
@@ -89,8 +74,8 @@ function QXC()
 
 class QXCore
 {
-    private static $_QXC;
-    private $_GLOBALS;
+    private static $QXC;
+    private $GLOBALS;
     private $queryStringArray = array();
 
     public $test = 'test';
@@ -102,13 +87,13 @@ class QXCore
 
     function __construct()
     {
-        $this->_GLOBALS = array();
+        $this->GLOBALS = array();
 
-        $this->_GLOBALS['POST'] = $_POST;
-        $this->_GLOBALS['GET'] = $_GET;
-        $this->_GLOBALS['COOKIE'] = $_COOKIE;
-        $this->_GLOBALS['SESSION'] = $_SESSION;
-        $this->_GLOBALS['FILES'] = $_FILES;
+        $this->GLOBALS['POST'] = $_POST;
+        $this->GLOBALS['GET'] = $_GET;
+        $this->GLOBALS['COOKIE'] = $_COOKIE;
+        $this->GLOBALS['SESSION'] = $_SESSION;
+        $this->GLOBALS['FILES'] = $_FILES;
 
         if (!empty($_GET['qstring']))
         {
@@ -124,13 +109,6 @@ class QXCore
         
         // Is in Debug mode
         define("DEBUG", (bool)$this->Config->Get('debug'));
-
-        $qerror = $this->getGlobal('qerror', 'GET');
-
-        if(!empty($qerror))
-        {
-            throw new QWebException((int)$qerror);
-        }
         
         // Load necessary controllers
         $this->loadController();
@@ -143,7 +121,7 @@ class QXCore
             $cName = $this->getPart(0);
         }
         
-        $cName = (is_null($cName) || empty ($cName))?CORE_MAIN_CONTROLLER:strtolower(trim($cName));
+        $cName = (is_null($cName) || empty ($cName)) ? CORE_MAIN_CONTROLLER : strtolower(trim($cName));
 
         $cFileName = "{$cName}." . CORE_PHP_EXT;
 
@@ -192,11 +170,11 @@ class QXCore
     {
         if (empty($key))
         {
-            return (array_key_exists($globalName, $this->_GLOBALS) ? $this->_GLOBALS[$globalName] : NULL);
+            return (array_key_exists($globalName, $this->GLOBALS) ? $this->GLOBALS[$globalName] : NULL);
         }
         else
         {
-            return (array_key_exists($key, $this->_GLOBALS[$globalName]) ? $this->_GLOBALS[$globalName][$key] : NULL);
+            return (array_key_exists($key, $this->GLOBALS[$globalName]) ? $this->GLOBALS[$globalName][$key] : NULL);
         }
     }
 
@@ -210,12 +188,12 @@ class QXCore
 
     public static function GetInstance()
     {
-        if (!self::$_QXC instanceof QXCore)
+        if (!self::$QXC instanceof QXCore)
         {
-            self::$_QXC = new self();
+            self::$QXC = new self();
         }
         
-        return self::$_QXC;
+        return self::$QXC;
     }
 
     // Private Methods
@@ -226,6 +204,10 @@ class QXCore
         if (file_exists($extPath))
         {
             include_once ($extPath);
+        }
+        else
+        {
+            // TODO Write else statement
         }
     }
 
@@ -241,7 +223,7 @@ class QXCore
             $this->$name = new $qname();
             $this->$name->QXC = $this;
 
-            if(method_exists($this->$name, "Initialize"))
+            if(is_callable(array($this->$name, "Initialize")))
             {
                 $this->$name->Initialize();
             }
