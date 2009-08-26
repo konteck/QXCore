@@ -14,22 +14,16 @@
 
 */
 
-define('START_TIME', microtime(true));
+define('START_TIME'           , microtime(true));
 
 // Define system varibles
-define('CORE_KEY', true);
-
-define('CORE_PHP_EXT', 'php');
-
-define('CORE_VIEW_EXT', 'html');
-
-define('CORE_CONFIG_NAME', 'web');
-
+define('CORE_KEY'             , true);
+define('CORE_PHP_EXT'         , 'php');
+define('CORE_VIEW_EXT'        , 'html');
+define('CORE_CONFIG_NAME'     , 'web');
 define('CORE_CONFIG_EXTENSION', 'config.xml');
-
-define('CORE_MAIN_CONTROLLER', 'Main');
-
-define('CORE_VER', '0.92');
+define('CORE_MAIN_CONTROLLER' , 'Main');
+define('CORE_VER'             , '0.92');
 
 //--
 
