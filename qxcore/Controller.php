@@ -6,7 +6,9 @@
  * @property QLog           $Log
  * @property QXml           $Xml
  * @property QJson          $Json
+ * @property QInput         $Input
  * @property QView          $View
+ * @property QMode          $Model
  */
 class QController extends QXCore
 {	

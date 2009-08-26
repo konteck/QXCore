@@ -1,7 +1,5 @@
 <?php
 
-include_once (CORE_DIR . "/system/log/QException.php");
-
 class QLog
 {
     static private $logsArray = array();
@@ -23,6 +21,6 @@ class QLog
 
     public function GetLogs()
     {
-        return QLog::$logsArray;
+        return self::$logsArray;
     }
 }

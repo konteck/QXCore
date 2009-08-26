@@ -105,11 +105,18 @@ class QXCore
 
     public function Initialize()
     {
+        // Initialize Logger
         $this->Log->Trace('Start Loading: ' . START_TIME);
-        
+                
         // Is in Debug mode
         define("DEBUG", (bool)$this->Config->Get('debug'));
-        
+
+        // Initialize Custom Error Handler
+        set_error_handler(array($this->Exception, ErrorHandler), E_ALL & ~E_NOTICE);
+
+        // Initialize Custom Exception Handler
+//        set_exception_handler(array($this->Exception, ExceptionHandler));
+     
         // Load necessary controllers
         $this->loadController();
     }
@@ -221,7 +228,7 @@ class QXCore
             $qname = "Q" . $name;
 
             $this->$name = new $qname();
-            $this->$name->QXC = $this;
+            $this->$name->QXC = self::$QXC;
 
             if(is_callable(array($this->$name, "Initialize")))
             {
