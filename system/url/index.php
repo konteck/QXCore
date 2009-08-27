@@ -55,5 +55,3 @@ class QUrl
 		return $this->tempVar;
 	}
 }
-
-?>

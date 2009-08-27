@@ -36,21 +36,27 @@ class QException extends Exception
     }
 }
 
-class QWebException extends Exception
-{
-    protected $severity;
+class QWebException extends QController
+{    
+    private $message;
+    private $code;
+    private $tracelog;
     
-    public function __construct($message = "", $code = "", $severity = "", $filename = "", $lineno = "")
+    public function __construct($message = "", $code = "", $tracelog = "")
     {
         $this->message = $message;
         $this->code = $code;
-        $this->severity = $severity;
-        $this->file = $filename;
-        $this->line = $lineno;
-    }
+        $this->tracelog = $tracelog;
 
-    public function getSeverity()
-    {
-        return $this->severity;
+        $this->ViewName = "qxc_error";
+
+        $this->View->title = "{$code} | Oops! an error occured";
+        $this->View->number = $code;
+        $this->View->header = $this->View->Load('qxc_header');
+        $this->View->footer = $this->View->Load('qxc_footer');
+
+        $this->View->Render();
+
+        die();
     }
 }

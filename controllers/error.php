@@ -11,7 +11,7 @@ class Error extends QController
     {
         $this->ViewName = "qxc_error";
 
-//        throw new QWebException("", "", "", "", "");
+        throw new QWebException("", "", "", "", "");
     }
 
     public function Index($code = 404)

@@ -15,5 +15,3 @@ class QJson
         return json_decode($string, true);
     }
 }
-
-?>

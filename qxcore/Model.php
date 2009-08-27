@@ -1,11 +1,9 @@
 <?php
 
-class QModel 
+class QModel
 {
-	function __construct() 
-	{
-		echo QModel;
-	}
+    function __construct()
+    {
+        echo QModel;
+    }
 }
-
-?>

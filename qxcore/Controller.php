@@ -6,7 +6,8 @@
  * @property QLog           $Log
  * @property QXml           $Xml
  * @property QJson          $Json
- * @property QInput         $Input
+ * @property QRequest       $Request
+ * @property QResponse      $Response
  * @property QView          $View
  * @property QMode          $Model
  */
@@ -17,7 +18,7 @@ class QController extends QXCore
 
     function __construct()
     {
-    
+
     }
 
     function __get($name)
@@ -70,18 +71,18 @@ class QController extends QXCore
 
         return new QView($vName);
     }
-	
-        private function loadExtension($name)
+
+    private function loadExtension($name)
+    {
+        $mPath = WEB_DIR . "/modeles/{$name}_model." . CORE_PHP_EXT;
+
+        if (file_exists($mPath))
         {
-            $mPath = WEB_DIR . "/modeles/{$name}_model." . CORE_PHP_EXT;
+            include_once ($mPath);
 
-            if (file_exists($mPath))
-            {
-                include_once ($mPath);
+            $className = $name . '_View';
 
-                $className = $name . '_View';
-
-                $this->$name = new $className();
-            }
+            $this->$name = new $className();
         }
     }
+}

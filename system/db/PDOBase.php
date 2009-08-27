@@ -76,5 +76,3 @@ abstract class QPDODriverBase extends PDO
         return $str;
     }
 }
-
-?>
