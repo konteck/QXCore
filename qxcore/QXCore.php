@@ -50,6 +50,17 @@ if (! function_exists('pr'))
     }
 }
 
+if (! function_exists('_'))
+{
+    /**
+     * Localization Function TODO Implement
+     */
+    function _($key)
+    {
+        echo $key;
+    }
+}
+
 function ET()
 {
     return substr((microtime(true) - START_TIME), 0, 6);
@@ -136,7 +147,7 @@ class QXCore
         }
         else
         {
-            throw new QWebException(404);
+            throw new QWebException("Page not found", 404);
         }
 
         include_once ($cPath);
