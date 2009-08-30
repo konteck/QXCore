@@ -28,7 +28,8 @@ define('CORE_VER'             , '0.92');
 //--
 
 require_once (CORE_DIR . '/qxcore/Controller.php');
-require_once (CORE_DIR . '/qxcore/xhtml.php');
+require_once (CORE_DIR . '/qxcore/Localization.php');
+require_once (CORE_DIR . '/qxcore/XHtml.php');
 
 if (! function_exists('pr'))
 {
@@ -47,17 +48,6 @@ if (! function_exists('pr'))
         }
 
         echo("</pre>");
-    }
-}
-
-if (! function_exists('_'))
-{
-    /**
-     * Localization Function TODO Implement
-     */
-    function _($key)
-    {
-        echo $key;
     }
 }
 

@@ -6,32 +6,73 @@
         Purpose of the stylesheet follows.
 */
 
+html, body {
+    height:100%;
+}
+
+
 body {
     margin: 0;
     padding: 0;
+    background: #003e75 url('body-background.jpg') repeat-x;
 }
 
 #header {
     position: relative;
     width: 100%;
     height: 190px;
-    background: transparent url('header-background.jpg') repeat-x scroll center;
-}
-
-.error-center-block {
-    margin: auto;
-    width: 40%;
-    height: 10%;
-    color: #ccc;
-}
-
-.error-center-block h1 {
-    font-size: 100px;
+    /*background: transparent url('header-background.jpg') repeat-x scroll center;*/
 }
 
 h1 {
     padding: 0;
     margin: 5px;
     font-family:"Georgia","Courier New",Courier,monospace;
+}
+
+.search-box {
+    width: 400px;
+    height: 50px;
+    margin: 30px 30px;
+    float: right;
+}
+
+.input-search {
+    background:#1E5380 none repeat scroll 0 0;
+    border:1px solid #6998BE;
+    color:#6998BE;
+    font-size:14px;
+    height:20px;
+    padding:6px;
+    width: 300px;
+}
+
+/* Push footer to page bottom
+---------------------------------------------------------------------------*/
+#wrapper {
+    position:relative;
+    min-height:100%;
+    height:auto  !important;
+    height:100%;
+    margin:0 auto -4em;
+}
+
+#footer, #push {
+    height:4em;
+}
+
+/* Error page
+---------------------------------------------------------------------------*/
+.error-center-block {
+    margin: auto;
+    padding: 10px;
+    width: 40%;
+    height: 30%;
+    color: #ccc;
+    background-color: #fff;
+}
+
+.error-center-block h1 {
+    font-size: 100px;
 }
 
