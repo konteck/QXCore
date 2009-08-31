@@ -2,56 +2,112 @@
 
 class QRequest
 {
-    private $tempVar = "";
+    private $tempVar;
+    private $method;
 
     /**
      * @return QModel Returns QModel
      */
-    function Post($name = '')
+    public function Post($name = '')
     {
-        $var = $this->QXC->getGlobal($name, 'POST');
+        $objClone = clone $this;
+        $objClone->tempVar = $this->QXC->getGlobal($name, 'POST');
 
-        return $var;
+        return $objClone;
     }
 
     /**
      * @param name[optional]
      * @return string|array
      */
-    function Get($name = '')
+    public function Get($name = '')
     {
-        $this->tempVar = $this->QXC->getGlobal($name, 'GET');
+        if (empty ($name))
+        {
+            return $objClone->tempVar = $this->QXC->getGlobal("", 'GET');
+        }
+        else
+        {
+            $objClone = clone $this;
+            $objClone->tempVar = $this->QXC->getGlobal($name, 'GET');
+
+            return $objClone;
+        }
+    }
+
+    /**
+     * @return QModel Returns QModel
+     */
+    public function Cookie($name)
+    {
+        $objClone = clone $this;
+        $objClone->tempVar = $this->QXC->getGlobal($name, 'COOKIE');
+
+        return $objClone;
+    }
+
+    /**
+     * @return QModel Returns QModel
+     */
+    public function Session($name)
+    {
+        $objClone = clone $this;
+        $objClone->tempVar = $this->QXC->getGlobal($name, 'SESSION');
+
+        return $objClone;
+    }
+
+    /**
+     * @return QModel Returns QModel
+     */
+    public function Files()
+    {
+        $objClone = clone $this;
+        $objClone->tempVar = $this->QXC->getGlobal($name, 'FILES');
+
+        return $objClone;
+    }
+
+    
+    public function Validate($pattern)
+    {
+        if(strpos($pattern, "/") !== 0)
+        {
+            $pattern = "/{$pattern}/";
+        }
+
+        if (preg_match($pattern, $this->tempVar))
+        {
+            return $this;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function Clear()
+    {
+        $this->tempVar = strip_tags(mysql_escape_string($this->tempVar));
+
         return $this;
     }
 
-    /**
-     * @return QModel Returns QModel
-     */
-    function Cookie($name)
+    public function Trim($chars = "")
     {
-        $var = $this->QXC->getGlobal($name, 'COOKIE');
-        return $var;
+        if (empty ($chars))
+        {
+            $this->tempVar = trim($this->tempVar);
+        }
+        else
+        {
+            $this->tempVar = trim($this->tempVar, $chars);
+        }
+
+        return $this;
     }
 
-    /**
-     * @return QModel Returns QModel
-     */
-    function Session($name)
-    {
-        $var = $this->QXC->getGlobal($name, 'SESSION');
-        return $var;
-    }
-
-    /**
-     * @return QModel Returns QModel
-     */
-    function Files()
-    {
-        $var = $this->QXC->getGlobal($name, 'FILES');
-        return $var;
-    }
-
-    function __toString()
+    public function __toString()
     {
         return (string)$this->tempVar;
     }
