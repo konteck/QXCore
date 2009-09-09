@@ -6,6 +6,7 @@
  * @property QLog           $Log
  * @property QXml           $Xml
  * @property QJson          $Json
+ * @property QCaptcha       $Captcha
  * @property QRequest       $Request
  * @property QResponse      $Response
  * @property QView          $View
