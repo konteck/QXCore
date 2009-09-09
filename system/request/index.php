@@ -11,6 +11,7 @@ class QRequest
     public function Post($name = '')
     {
         $objClone = clone $this;
+        $objClone->method = "POST";
         $objClone->tempVar = $this->QXC->getGlobal($name, 'POST');
 
         return $objClone;
@@ -29,6 +30,7 @@ class QRequest
         else
         {
             $objClone = clone $this;
+            $objClone->method = "GET";
             $objClone->tempVar = $this->QXC->getGlobal($name, 'GET');
 
             return $objClone;
@@ -41,6 +43,7 @@ class QRequest
     public function Cookie($name)
     {
         $objClone = clone $this;
+        $objClone->method = "COOKIE";
         $objClone->tempVar = $this->QXC->getGlobal($name, 'COOKIE');
 
         return $objClone;
@@ -49,11 +52,27 @@ class QRequest
     /**
      * @return QModel Returns QModel
      */
-    public function Session($name)
+    public function Session($name, $value = "")
     {
-        $objClone = clone $this;
-        $objClone->tempVar = $this->QXC->getGlobal($name, 'SESSION');
+        if (is_null($_SESSION))
+        {
+            session_name("QXC");
+            session_start();
 
+            $this->QXC->setGlobal(&$_SESSION, 'SESSION');
+        }
+
+        if (empty($value))
+        {
+            $objClone = clone $this;
+            $objClone->method = "SESSION";
+            $objClone->tempVar = $this->QXC->getGlobal($name, 'SESSION');
+        }
+        else
+        {
+            $_SESSION[$name] = $value;
+        }
+        
         return $objClone;
     }
 
@@ -63,6 +82,7 @@ class QRequest
     public function Files()
     {
         $objClone = clone $this;
+        $objClone->method = "FILES";
         $objClone->tempVar = $this->QXC->getGlobal($name, 'FILES');
 
         return $objClone;
@@ -88,7 +108,11 @@ class QRequest
 
     public function Clear()
     {
-        $this->tempVar = strip_tags(mysql_escape_string($this->tempVar));
+        $str = urldecode($this->tempVar);
+        $str = strip_tags($str);
+        $str = mysql_escape_string($str);
+        
+        $this->tempVar = $str;
 
         return $this;
     }
@@ -107,8 +131,13 @@ class QRequest
         return $this;
     }
 
-    public function __toString()
+    public function ToString()
     {
         return (string)$this->tempVar;
+    }
+
+    public function __toString()
+    {
+        return $this->ToString();
     }
 }

@@ -15,11 +15,8 @@ class QDb
     
     private $connObject;
     
-    function __construct()
-    {
-        // Receive main instance
-        $qxc = QXC();
-        
+    function __construct($qxc)
+    {        
         $connStr = $qxc->Config->Get('connection_string');
 
         if(!empty ($connStr))
@@ -64,13 +61,7 @@ class QDb
 
                 try
                 {
-                    $this->connObject = new $className();
-                    $this->connObject->Driver = $this->Driver;
-                    $this->connObject->Server = $this->Server;
-                    $this->connObject->Port = $this->Server;
-                    $this->connObject->User = $this->User;
-                    $this->connObject->Password = $this->Password;
-                    $this->connObject->Database = $this->Database;
+                    $this->connObject = new $className($this);
 
                     $this->Connection = new QDbConnection(&$this->connObject);
                 }
@@ -144,7 +135,7 @@ class QDbConnection
 
     public function Open()
     {
-        $this->dbObject->Initialize();
+//        $this->dbObject->Initialize();
 
         $this->State = true;
     }

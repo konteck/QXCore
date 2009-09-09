@@ -16,11 +16,15 @@ class QException extends Exception
 
     public function ErrorHandler($message = "", $code = "", $severity = "", $filename = "", $lineno = "")
     {
+        echo "QException throwed";
+        echo "<p>";
         echo $this->message = $message;
         echo $this->code = $code;
         $this->severity = $severity;
         $this->file = $filename;
         $this->line = $lineno;
+
+        die();
     }
 
     public function ExceptionHandler($ex)

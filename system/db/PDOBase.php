@@ -2,25 +2,20 @@
 
 abstract class QPDODriverBase extends PDO
 {
-    public $Driver;
-    public $Server;
-    public $Port;
-    public $User;
-    public $Password;
-    public $Database;
-    public $Encoding;
-    public $Connection;    
+    private $QDB;
     private $DSN;
 
-    public function Initialize()
+    function  __construct($qdb)
     {
+        $this->QDB = $qdb;
+        
         $this->DSN = $this->GenerateDSN();
 
-        parent::__construct($this->DSN, $this->User, $this->Password);
+        parent::__construct($this->DSN, $this->QDB->User, $this->QDB->Password);
 
-        if (!empty ($this->Encoding))
+        if (!empty ($this->QDB->Encoding))
         {
-            $this->SetEncoding($this->Encoding);
+            $this->SetEncoding($this->QDB->Encoding);
         }
     }
     
@@ -68,10 +63,10 @@ abstract class QPDODriverBase extends PDO
     protected function GenerateDSN()
     {
         // Generate PHP PDO suitable
-        $str = strtolower($this->Driver) . ":";
-        $str .= empty($this->Server) ? "host=localhost;" : "host={$this->Server};";
-        $str .= empty($this->Port) ? "" : "port={$this->Port};";
-        $str .= empty($this->Database) ? "" : "dbname={$this->Database};";
+        $str = strtolower($this->QDB->Driver) . ":";
+        $str .= empty($this->QDB->Server) ? "host=localhost;" : "host={$this->QDB->Server};";
+        $str .= empty($this->QDB->Port) ? "" : "port={$this->QDB->Port};";
+        $str .= empty($this->QDB->Database) ? "" : "dbname={$this->QDB->Database};";
 
         return $str;
     }

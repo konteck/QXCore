@@ -78,13 +78,6 @@ class QXCore
     private $GLOBALS;
     private $queryStringArray = array();
 
-    public $test = 'test';
-
-    public function test()
-    {
-        return $this->test;
-    }
-
     function __construct()
     {
         $this->GLOBALS = array();
@@ -92,7 +85,6 @@ class QXCore
         $this->GLOBALS['POST'] = $_POST;
         $this->GLOBALS['GET'] = $_GET;
         $this->GLOBALS['COOKIE'] = $_COOKIE;
-        $this->GLOBALS['SESSION'] = $_SESSION;
         $this->GLOBALS['FILES'] = $_FILES;
 
         if (!empty($_GET['qstring']))
@@ -100,7 +92,7 @@ class QXCore
             $this->queryStringArray = array_map(create_function('$str', 'return (preg_match("/^[\w\-\.]{1,50}$/", trim($str)))?$str:NULL;'), split("/", $_GET['qstring']));
         }
 
-        $_GET = $_POST = $_REQUEST = $_COOKIE = $_SESSION = $_FILES = array();        
+        $_GET = $_POST = $_REQUEST = $_COOKIE = $_FILES = array();
     }
 
     public function Initialize()
@@ -185,6 +177,14 @@ class QXCore
         }
     }
 
+    public function setGlobal($array, $globalName)
+    {
+        if (is_array($array))
+        {
+            $this->GLOBALS[$globalName] = &$array;
+        }
+    }
+
     public function getPart($num)
     {
         if (is_numeric($num))
@@ -225,15 +225,17 @@ class QXCore
         {
             $this->LoadModule($name);
 
-            $qname = "Q" . $name;
+            $qname = "Q{$name}";
 
-            $this->$name = new $qname();
+            $this->$name = new $qname(self::$QXC);
             $this->$name->QXC = self::$QXC;
+            $this->$name->PATH = CORE_DIR . '/system/' . strtolower($name);
 
-            if(is_callable(array($this->$name, "Initialize")))
-            {
-                $this->$name->Initialize();
-            }
+            // TODO Remove, I no really need this!
+//            if(is_callable(array($this->$name, "Initialize")))
+//            {
+//                $this->$name->Initialize();
+//            }
 
             return $this->$name;
         }
