@@ -2,12 +2,26 @@
 
 class QCaptcha
 {
-    private $width;
-    private $height;
-    private $background;
-    private $format;
-    private $font;
-    private $dic;
+    public $width;
+    public $height;
+    public $background;
+    public $format;
+    public $font;
+    public $dic;
+    public $blur;
+    public $scale = 8;
+
+    private $maxRotation = 8;
+    private $minSize = 10;
+    private $maxSize = 20;
+
+    private $im;
+    private $colors = array // Foreground colors in RGB-array
+    (
+        array(27,78,181), // blue
+        array(22,163,35), // green
+        array(214,36,7),  // red
+    );
     
     function __construct()
     {
@@ -36,37 +50,40 @@ class QCaptcha
     public function Render()
     {
         // Text
-        $lines = file($this->dic);
-        $text = $lines[rand(0, count($lines) - 1)];
+        $lines = file($this->dic, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES | FILE_TEXT);
+        $linesNum = count($lines) - 1;
+
+        shuffle($lines);
+
+        $prefix = $lines[rnd($linesNum)];
+        $postfix = $lines[rnd($linesNum)];
+
+        $text = $prefix . $postfix;
 
         $this->QXC->Request->Session('qxc_captcha_text', $text);
 
         // Font
         if(!empty ($this->font))
         {
-            $font = $this->font;
+            $fontfile = $this->font;
         }
         else
         {
             $fontsArray = $this->ReadDir("{$this->PATH}/fonts", "ttf");
             
-            $font = "{$this->PATH}/fonts/{$fontsArray[rand(0, count($fontsArray) - 1)]}";
+            $fontfile = "{$this->PATH}/fonts/{$fontsArray[rand(0, count($fontsArray) - 1)]}";
         }
+
+        $this->InitImage();
+        $this->SetBackground();
+//        $this->SetText();
 
         switch ($this->format)
         {
-            case IMG_PNG:                
-                $im = imagecreatefrompng("{$this->PATH}/{$this->background}");
-
-                // Color
-                $color = imagecolorallocate($im, rand(10, 50), rand(10, 50), rand(10, 50));
-
-                // Add the text
-                imagettftext($im, rand(10, 12), rand(-10, 10), 10, rand(13, 15), $color, $font, $text);
-
+            case IMG_PNG: 
                 header("Content-type: image/png");
-                imagepng($im);
-                imagedestroy($im);
+                imagepng($this->im);
+                imagedestroy($this->im);
                 break;
             default:
                 break;
@@ -96,6 +113,48 @@ class QCaptcha
         else
         {
             throw new QException("Incorrect string format");
+        }
+    }
+
+    private function InitImage()
+    {
+        $this->im = imagecreatetruecolor($this->width, $this->height);
+
+        $color = imagecolorallocate($this->im, 205, 255, 255);
+
+        imagefilledrectangle($this->im, 0, 0, $this->width, $this->height, $color);
+    }
+
+    private function SetBackground()
+    {
+        $png = imagecreatefrompng("{$this->PATH}/{$this->background}");
+
+        imagecopyresampled($this->im, $png, 10, 30, 0, 0, $this->width, $this->height, $this->width, $this->height);
+    }
+
+    private function SetText()
+    {
+        $length = strlen($text);
+        $x = 5 * $this->scale;
+        $y = round(($this->height /40) * $this->scale);
+
+        // Foreground color
+        $color = $this->colors[rnd(count($this->colors) - 1)];
+        $color = imagecolorallocate($this->im, $color[0], $color[1], $color[2]);
+
+        for ($i = 0; $i < $length; $i++)
+        {
+            $degree   = rnd($this->maxRotation * -1, $this->maxRotation);
+
+            $fontsize = rnd($this->minSize, $this->maxSize);
+
+            $coords = imagettftext($this->im, $fontsize, $degree, $x, $y, $color, $fontfile, $text[$i]);
+            //                     var_dump($fontsize);
+            //                     die;
+
+            //                    $coords = imagettftext($this->im, $fontsize, $degree, $x, $y, $color, $fontfile, $text[$i]);
+
+            $x += ($coords[2] - $x) + ($this->scale * -1);
         }
     }
 

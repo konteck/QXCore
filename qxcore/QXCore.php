@@ -49,14 +49,32 @@ if (! function_exists('pr'))
 
         if ($terminate)
         {
-            die("Exec: " . ET());
+            die("Exec: " . et());
         }
 
         echo("</pre>");
     }
 }
 
-function ET()
+function rnd($min = 0, $max = 0)
+{
+    srand((double)microtime() * 1234567);
+
+    if ($max > 0)
+    {
+        return rand($min, $max);
+    }
+    else if($min > 0)
+    {
+        return rand(0, $min);
+    }
+    else
+    {
+        return rand();
+    }
+}
+
+function et()
 {
     return substr((microtime(true) - START_TIME), 0, 6);
 }
