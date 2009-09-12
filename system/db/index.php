@@ -91,15 +91,15 @@ class QDb
         }
         else
         {
-            return $this->connObject->Query($sql);
+            return $this->connObject->Query($sql, $this->Parameters);
         }
     }
 
     public function ExecuteQuery($sql = "")
     {
-        $q = (empty ($sql)) ? $this->CommandText : $sql;
+        $sql = (empty ($sql)) ? $this->CommandText : $sql;
 
-        return $this->connObject->Query($q, $this->Parameters);
+        return $this->connObject->Query($sql, $this->Parameters);
     }
 
     // Private Methods

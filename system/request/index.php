@@ -54,14 +54,6 @@ class QRequest
      */
     public function Session($name, $value = "")
     {
-        if (is_null($_SESSION))
-        {
-            session_name("QXC");
-            session_start();
-
-            $this->QXC->setGlobal(&$_SESSION, 'SESSION');
-        }
-
         if (empty($value))
         {
             $objClone = clone $this;
@@ -115,6 +107,18 @@ class QRequest
         $this->tempVar = $str;
 
         return $this;
+    }
+
+    public function Equals($string)
+    {
+        if(!empty ($this->tempVar) && $this->tempVar == $string)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public function Trim($chars = "")

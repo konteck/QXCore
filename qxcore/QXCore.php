@@ -105,6 +105,14 @@ class QXCore
         $this->GLOBALS['COOKIE'] = $_COOKIE;
         $this->GLOBALS['FILES'] = $_FILES;
 
+        if (is_null($_SESSION))
+        {
+            session_name("QXC");
+            session_start();
+
+            $this->GLOBALS['SESSION'] = &$_SESSION;
+        }
+
         if (!empty($_GET['qstring']))
         {
             $this->queryStringArray = array_map(create_function('$str', 'return (preg_match("/^[\w\-\.]{1,50}$/", trim($str)))?$str:NULL;'), split("/", $_GET['qstring']));
