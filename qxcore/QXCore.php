@@ -29,6 +29,8 @@ define('CORE_VER'               , '0.92');
 define('__EMAIL__'              , '[\w\-\.]{1,20}@[\w\-\.]{2,20}\.[a-zA-Z]{2,4}');
 define('__URL__'                , '(?:https?|ftp)://[\w\-\.]+\.[a-zA-Z]{2,4}/?');
 define('__PASSWORD__'           , '[\w]{4,12}');
+define('__EMPTY__'              , '[\s]*');
+define('__NOTEMPTY__'           , '[^\s]+');
 
 //--
 
@@ -98,6 +100,11 @@ class QXCore
 
     function __construct()
     {
+        if (!headers_sent())
+        {
+            header("Powered-By: QXCore");
+        }
+
         $this->GLOBALS = array();
 
         $this->GLOBALS['POST'] = $_POST;
@@ -179,11 +186,11 @@ class QXCore
 
             call_user_func_array(array($controller, $methodName), $this->queryStringArray);
         }
-        else if(is_callable(array($controller, "Index")))
+        else if(is_callable(array($controller, "Main")))
         {
             array_shift($this->queryStringArray);
             
-            call_user_func_array(array($controller, "Index"), $this->queryStringArray);
+            call_user_func_array(array($controller, "Main"), $this->queryStringArray);
         }
         else
         {
@@ -203,11 +210,17 @@ class QXCore
         }
     }
 
-    public function setGlobal($array, $globalName)
+    public function setGlobal($key, $value, $globalName)
     {
-        if (is_array($array))
+        if (!empty($key))
         {
-            $this->GLOBALS[$globalName] = &$array;
+            $this->GLOBALS[$globalName][$key] = $value;
+
+            return true;
+        }
+        else
+        {
+            throw new QException("Not implemented");
         }
     }
 
@@ -256,12 +269,6 @@ class QXCore
             $this->$name = new $qname(self::$QXC);
             $this->$name->QXC = self::$QXC;
             $this->$name->PATH = CORE_DIR . '/system/' . strtolower($name);
-
-            // TODO Remove, I no really need this!
-//            if(is_callable(array($this->$name, "Initialize")))
-//            {
-//                $this->$name->Initialize();
-//            }
 
             return $this->$name;
         }

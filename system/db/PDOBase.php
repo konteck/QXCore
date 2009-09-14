@@ -29,22 +29,27 @@ abstract class QPDODriverBase extends PDO
         // NULL
     }
 
-    public function Query($sql)
+    public function Query($sql, $params = array(), $single = false)
     {
-        $stmt = $this->prepare($sql);
+        $stmt = $this->prepare($sql);        
 
-        $args = func_get_args();
-
-        if(is_array($args[1]))
-        {
-            $stmt->execute($args[1]);
+        if(is_array($params) && count($params) > 0)
+        {            
+            $stmt->execute($params);
         }
         else
         {
             $stmt->execute();
         }
 
-        return $stmt->fetchAll();
+        if ($single)
+        {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        else
+        {
+            return $stmt->fetchAll();
+        }
     }
 
     public function Clean($sql)

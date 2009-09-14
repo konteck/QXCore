@@ -127,7 +127,7 @@ class QCaptcha
     {
         $length = strlen($text);
         $x = ($this->width - ($length * 20)) / 2;
-        $y = round(($this->height / 15) * $this->scale);
+        $y = round(($this->height / 12) * $this->scale);
 
         // Foreground color
         $color = $this->colors[rnd(count($this->colors) - 1)];

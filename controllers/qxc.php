@@ -7,7 +7,7 @@ class QXC extends QController
 
     }
 
-    public function Index()
+    public function Main()
     {
         $this->View->title = "Hello World!";
         $this->View->header = $this->View->Load('qxc_header');

@@ -80,31 +80,85 @@ class QRequest
         return $objClone;
     }
 
-    
-    public function Validate($pattern)
+    /**
+     * TODO Optimize algorithm
+     * @param name[optional]
+     * @return object|array
+     */
+    public function Validate($input)
     {
-        if(strpos($pattern, "/") !== 0)
+        if (is_array($input) && !empty ($this->method))
         {
-            $pattern = "/{$pattern}/";
-        }
+            $retArray = array();
+            
+            foreach ($input as $key => $val)
+            {
+                $var = $this->QXC->getGlobal($key, $this->method);
 
-        if (preg_match($pattern, $this->tempVar))
-        {
-            return $this;
+                if(strpos($val, "/") !== 0)
+                {
+                    $val = "/^{$val}$/";
+                }
+
+                if (preg_match($val, $var))
+                {
+                    $retArray[$key] = true;
+                }
+                else
+                {
+                    $retArray[$key] = false;
+                }
+            }
+
+            return $retArray;
         }
         else
         {
-            return false;
+            if(strpos($input, "/") !== 0)
+            {
+                $input = "/{$input}/";
+            }
+
+            if (preg_match($input, $this->tempVar))
+            {
+                return $this;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
-    public function Clear()
+    public function Clean()
     {
-        $str = urldecode($this->tempVar);
-        $str = strip_tags($str);
-        $str = mysql_escape_string($str);
-        
-        $this->tempVar = $str;
+        if (empty($this->tempVar) && !empty($this->method))
+        {
+            $arr = $this->QXC->getGlobal(null, $this->method);
+            
+            foreach ($arr as $key => $val)
+            {
+                if (is_string($val))
+                {
+                    $this->QXC->setGlobal($key, $this->cleanString($val), $this->method);
+                }
+                else
+                {
+                    // TODO Write cleaner code for array
+                }                
+            }
+        }
+        else
+        {
+            if (is_string($this->tempVar))
+            {
+                $this->tempVar = $this->cleanString($this->tempVar);
+            }
+            else
+            {
+                // TODO Write cleaner code for array
+            }
+        }
 
         return $this;
     }
@@ -140,8 +194,56 @@ class QRequest
         return (string)$this->tempVar;
     }
 
+    public function ToArray()
+    {
+        if (!empty ($this->tempVar))
+        {
+            return $this->tempVar;
+        }
+        else if (!empty ($this->method))
+        {
+            return $this->QXC->getGlobal(null, $this->method);
+        }
+        else
+        {
+            throw new QException("Not implemented");
+        }
+    }
+
     public function __toString()
     {
         return $this->ToString();
+    }
+
+    private function cleanString($string)
+    {
+        $str = $string;
+        $str = urldecode($str);
+        $str = strip_tags($str);
+        $str = mysql_escape_string($str);
+
+        return trim($str);
+    }
+
+    protected function __get($name)
+    {
+        $methods = array
+        (
+            'POST',
+            'GET',
+            'FILE',
+            'COOKIE',
+            'SESSION'
+        );
+
+        if (isset($name) && in_array(strtoupper($name), $methods))
+        {
+            $objClone = clone $this;
+            $objClone->method = "POST";
+
+            return $objClone;
+        }
+
+        throw new QException("{$name} not defined");
     }
 }

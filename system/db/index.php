@@ -102,6 +102,13 @@ class QDb
         return $this->connObject->Query($sql, $this->Parameters);
     }
 
+    public function ExecuteScalar($sql = "")
+    {
+        $sql = (empty ($sql)) ? $this->CommandText : $sql;
+        
+        return $this->connObject->Query($sql, $this->Parameters, true);
+    }
+
     // Private Methods
     /**
      * @return array
