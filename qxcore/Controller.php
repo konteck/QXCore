@@ -9,10 +9,10 @@
  * @property QCaptcha       $Captcha
  * @property QRequest       $Request
  * @property QResponse      $Response
- * @property QView          $View
+ * @property View          $View
  * @property QMode          $Model
  */
-class QController extends QXCore
+class Controller extends QXCore
 {	
     public $ModelName = '';  //TODO: delete this
     public $ViewName = '';
@@ -70,7 +70,7 @@ class QController extends QXCore
 
         include_once (CORE_DIR . '/qxcore/View.php');
 
-        return new QView($vName);
+        return new View($vName);
     }
 
     private function loadExtension($name)

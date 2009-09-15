@@ -1,6 +1,6 @@
 <?php
 
-class QXC extends QController
+class QXC extends Controller
 {
     function __construct()
     {

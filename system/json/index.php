@@ -3,7 +3,7 @@
 class QJson
 {
     /**
-    * @return QModel Returns QModel
+    * @return Model Returns Model
     */
     function encode($string)
     {

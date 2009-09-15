@@ -40,7 +40,7 @@ class QException extends Exception
     }
 }
 
-class QWebException extends QController
+class QWebException extends Controller
 {    
     private $message;
     private $code;

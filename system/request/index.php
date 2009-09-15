@@ -1,12 +1,17 @@
 <?php
 
 class QRequest
-{
+{   
     private $tempVar;
     private $method;
 
+    function __construct()
+    {
+        
+    }
+
     /**
-     * @return QModel Returns QModel
+     * @return Model Returns Model
      */
     public function Post($name = '')
     {
@@ -38,7 +43,7 @@ class QRequest
     }
 
     /**
-     * @return QModel Returns QModel
+     * @return Model Returns Model
      */
     public function Cookie($name)
     {
@@ -50,7 +55,7 @@ class QRequest
     }
 
     /**
-     * @return QModel Returns QModel
+     * @return Model Returns Model
      */
     public function Session($name, $value = "")
     {
@@ -69,7 +74,7 @@ class QRequest
     }
 
     /**
-     * @return QModel Returns QModel
+     * @return Model Returns Model
      */
     public function Files()
     {
@@ -85,41 +90,21 @@ class QRequest
      * @param name[optional]
      * @return object|array
      */
-    public function Validate($input)
+    public function Validate($pattern)
     {
-        if (is_array($input) && !empty ($this->method))
+        if (empty ($this->method))
         {
-            $retArray = array();
-            
-            foreach ($input as $key => $val)
+            throw new QException("You must use 'Validate' method with an request method");
+        }        
+
+        if (!empty ($this->tempVar) && is_string($pattern))
+        {
+            if(strpos($pattern, "/") !== 0)
             {
-                $var = $this->QXC->getGlobal($key, $this->method);
-
-                if(strpos($val, "/") !== 0)
-                {
-                    $val = "/^{$val}$/";
-                }
-
-                if (preg_match($val, $var))
-                {
-                    $retArray[$key] = true;
-                }
-                else
-                {
-                    $retArray[$key] = false;
-                }
+                $pattern = "/{$pattern}/";
             }
 
-            return $retArray;
-        }
-        else
-        {
-            if(strpos($input, "/") !== 0)
-            {
-                $input = "/{$input}/";
-            }
-
-            if (preg_match($input, $this->tempVar))
+            if (preg_match($pattern, $this->tempVar))
             {
                 return $this;
             }
@@ -127,6 +112,44 @@ class QRequest
             {
                 return false;
             }
+        }       
+        else
+        {
+            $args = func_get_args();
+            
+            foreach ($args as $val)
+            {
+                $key = (string)$val[0];
+                $pattern = (string)$val[1];
+
+                $var = $this->QXC->getGlobal($key, $this->method);
+
+                if($pattern[0] != "/")
+                {
+                    $pattern = "/^{$pattern}$/";
+                }
+
+                if (!preg_match($pattern, $var))
+                {
+                    $this->QXC->setGlobal($key, $val[2], 'ERRORS');
+                }
+            }
+
+            return $this;
+        }
+    }
+
+    public function IsValid()
+    {
+        $errorsArray = QXC()->getGlobal(null, "ERRORS");
+        
+        if (is_array($errorsArray) && count($errorsArray) == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

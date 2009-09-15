@@ -1,6 +1,6 @@
 <?php
 
-class QModel extends QXCore
+class Model extends QXCore
 {
     function __construct()
     {

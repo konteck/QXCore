@@ -1,6 +1,6 @@
 <?php
 
-class QView
+class View
 {
     private $varsArray = array();
     private $viewName;    
@@ -73,6 +73,13 @@ class QView
         if (preg_match("/{[^}]+}/", $output) && count($this->varsArray) > 0)
         {
             $output = preg_replace(array_map(array($this, 'varsReplace'), array_keys($this->varsArray)), array_values($this->varsArray), $output);
+        }
+
+        $errorsArray = QXC()->getGlobal(null, "ERRORS");
+
+        if (is_array($errorsArray) && (bool)count($errorsArray) && stristr($output, "<error>"))
+        {
+            $output = preg_replace("/<error>/", join("<br />", $errorsArray), $output);
         }
 
         return $output;

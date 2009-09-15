@@ -111,6 +111,7 @@ class QXCore
         $this->GLOBALS['GET'] = $_GET;
         $this->GLOBALS['COOKIE'] = $_COOKIE;
         $this->GLOBALS['FILES'] = $_FILES;
+        $this->GLOBALS['ERRORS'] = array();
 
         if (is_null($_SESSION))
         {
@@ -200,13 +201,13 @@ class QXCore
 
     public function getGlobal($key, $globalName)
     {
-        if (empty($key))
+        if (!is_null($key) && !empty($key))
         {
-            return (array_key_exists($globalName, $this->GLOBALS) ? $this->GLOBALS[$globalName] : NULL);
+            return (array_key_exists($key, $this->GLOBALS[$globalName]) ? $this->GLOBALS[$globalName][$key] : NULL);            
         }
         else
         {
-            return (array_key_exists($key, $this->GLOBALS[$globalName]) ? $this->GLOBALS[$globalName][$key] : NULL);
+            return (array_key_exists($globalName, $this->GLOBALS) ? $this->GLOBALS[$globalName] : NULL);
         }
     }
 

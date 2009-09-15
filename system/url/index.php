@@ -24,7 +24,7 @@ class QUrl
 	}
 	
 	/**
-	 * @return QModel Returns QModel
+	 * @return Model Returns Model
 	 */
 	function cookie($name)
 	{
@@ -33,7 +33,7 @@ class QUrl
 	}
 	
 	/**
-	 * @return QModel Returns QModel
+	 * @return Model Returns Model
 	 */
 	function session($name)
 	{
@@ -42,7 +42,7 @@ class QUrl
 	}
 	
 	/**
-	 * @return QModel Returns QModel
+	 * @return Model Returns Model
 	 */
 	function files()
 	{

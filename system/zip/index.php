@@ -3,7 +3,7 @@
 class QZip
 {
     /**
-     * @return QModel Returns QModel
+     * @return Model Returns Model
      */	
 	function archive()
 	{
