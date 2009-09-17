@@ -79,7 +79,7 @@ class View
 
         if (is_array($errorsArray) && (bool)count($errorsArray) && stristr($output, "<error>"))
         {
-            $output = preg_replace("/<error>/", join("<br />", $errorsArray), $output);
+            $output = preg_replace("/<error>/", "<div class='error'>" . join("<br />", $errorsArray) . "</div>", $output);
         }
 
         return $output;

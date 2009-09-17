@@ -9,7 +9,7 @@
  * @property QCaptcha       $Captcha
  * @property QRequest       $Request
  * @property QResponse      $Response
- * @property View          $View
+ * @property View           $View
  * @property QMode          $Model
  */
 class Controller extends QXCore
