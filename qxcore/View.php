@@ -73,8 +73,17 @@ class View
         if (preg_match("/{[^}]+}/", $output) && count($this->varsArray) > 0)
         {
             $output = preg_replace(array_map(array($this, 'varsReplace'), array_keys($this->varsArray)), array_values($this->varsArray), $output);
+
+            if (preg_match_all("/{%[\s]?[\"\']+([^\"\']+)[\"\']+}/", $output, $matches))
+            {
+                foreach ($matches[1] as $val)
+                {
+                    $output = preg_replace("/{%[\s]?[\"\']+([^\"\']+)[\"\']+}/", new $this($val), $output, 1);
+                }
+            }
         }
 
+        // Display erros, validation etc.
         $errorsArray = QXC()->getGlobal(null, "ERRORS");
 
         if (is_array($errorsArray) && (bool)count($errorsArray) && stristr($output, "<error>"))

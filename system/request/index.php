@@ -95,7 +95,9 @@ class QRequest
         if (empty ($this->method))
         {
             throw new QException("You must use 'Validate' method with an request method");
-        }        
+        }
+
+        $args = func_get_args();
 
         if (!empty ($this->tempVar) && is_string($pattern))
         {
@@ -106,17 +108,20 @@ class QRequest
 
             if (preg_match($pattern, $this->tempVar))
             {
-                return $this;
+                return true;
             }
             else
             {
+                if (func_num_args() == 2 && is_string($args[1]))
+                {
+                    $this->QXC->setGlobal(null, $args[1], 'ERRORS');
+                }
+                
                 return false;
             }
         }       
         else
         {
-            $args = func_get_args();
-            
             foreach ($args as $val)
             {
                 $key = (string)$val[0];

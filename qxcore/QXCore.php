@@ -216,12 +216,10 @@ class QXCore
         if (!empty($key))
         {
             $this->GLOBALS[$globalName][$key] = $value;
-
-            return true;
         }
         else
         {
-            throw new QException("Not implemented");
+            $this->GLOBALS[$globalName][] = $value;
         }
     }
 

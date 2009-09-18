@@ -20,4 +20,9 @@ class QResponse
 
         die($url);
     }
+
+    public function Header($key, $value)
+    {
+        header($key, $value);
+    }
 }
