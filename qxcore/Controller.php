@@ -35,7 +35,9 @@ class Controller extends QXCore
                     $this->$name = $this->loadView();
                     break;
                 case 'user' :
-                    $this->$name = $this->loadExtension($name);
+                    include_once (CORE_DIR . '/qxcore/Modules.php');
+
+                    $this->$name = new UserModules();
                     break;
                 default :
                     parent::__get($name);
@@ -73,6 +75,7 @@ class Controller extends QXCore
         return new View($vName);
     }
 
+    // TODO: remove?
     private function loadExtension($name)
     {
         $mPath = WEB_DIR . "/modeles/{$name}_model." . CORE_PHP_EXT;

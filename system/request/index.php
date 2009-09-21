@@ -30,7 +30,7 @@ class QRequest
     {
         if (empty ($name))
         {
-            return $objClone->tempVar = $this->QXC->getGlobal("", 'GET');
+            return $objClone->tempVar = $this->QXC->getGlobal(null, 'GET');
         }
         else
         {
