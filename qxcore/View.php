@@ -5,13 +5,14 @@ class View
     private $varsArray = array();
     private $viewName;    
 
-    function __construct($name = '')
+    function __construct($name = '', $vars = array())
     {
         if (! empty($name))
         {
             $this->viewName = strtolower($name) . '_view';
         }
 
+        $this->varsArray = $vars;
         $this->varsArray['web_url'] = WEB_URL;
     }
 
@@ -78,7 +79,7 @@ class View
             {
                 foreach ($matches[1] as $val)
                 {
-                    $output = preg_replace("/{%[\s]?[\"\']+([^\"\']+)[\"\']+}/", new $this($val), $output, 1);
+                    $output = preg_replace("/{%[\s]?[\"\']+([^\"\']+)[\"\']+}/", new $this($val, $this->varsArray), $output, 1);
                 }
             }
         }

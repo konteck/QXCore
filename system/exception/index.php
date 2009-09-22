@@ -46,7 +46,7 @@ class QWebException extends Controller
     private $code;
     private $tracelog;
     
-    public function __construct($message = "", $code = "", $tracelog = "")
+    public function __construct($message = "", $tracelog = "")
     {
         $this->message = $message;
         $this->code = $code;
@@ -54,10 +54,8 @@ class QWebException extends Controller
 
         $this->ViewName = "qxc_error";
 
-        $this->View->title = "{$code} | Oops! an error occured";
-        $this->View->number = $code;
-        $this->View->header = $this->View->Load('qxc_header');
-        $this->View->footer = $this->View->Load('qxc_footer');
+        $this->View->title = "{$message} | Oops! an error occured";
+        $this->View->message = $message;
 
         $this->View->Render();
 

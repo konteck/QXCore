@@ -125,10 +125,7 @@ class QXCore
             $this->GLOBALS['SESSION'] = &$_SESSION;
         }
 
-        if (!empty($_GET['qstring']))
-        {
-            $this->queryStringArray = array_map(create_function('$str', 'return (preg_match("/^[\w\-\.]{1,50}$/", trim($str)))?$str:NULL;'), split("/", $_GET['qstring']));
-        }
+        $this->queryStringArray = $this->ParseQueryString();
 
         $_GET = $_POST = $_REQUEST = $_COOKIE = $_FILES = array();
     }
@@ -172,7 +169,7 @@ class QXCore
         }
         else
         {
-            throw new QWebException("Page not found", 404);
+            throw new QWebException("404 Page Not Found", 404);
         }
 
         include_once ($cPath);
@@ -258,6 +255,22 @@ class QXCore
         {
             // TODO Write else statement
         }
+    }
+
+    private function ParseQueryString()
+    {
+        $str = $_SERVER['REQUEST_URI'];
+            
+        $pos = strpos($str, "?");
+
+        if((bool)$pos)
+        {
+            $str = substr($str, 0, $pos);
+        }
+
+        $parts = preg_split("/\//", $str, -1, PREG_SPLIT_NO_EMPTY);
+
+        return array_map(create_function('$str', 'return (preg_match("/^[\w\-\.]{1,50}$/", trim($str)))?$str:NULL;'), $parts);
     }
 
     // Magic Methods

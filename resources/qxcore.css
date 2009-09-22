@@ -14,7 +14,6 @@ html, body {
 body {
     margin: 0;
     padding: 0;
-    background: #003e75 url('body-background.jpg') repeat-x;
 }
 
 #header {
@@ -73,6 +72,6 @@ h1 {
 }
 
 .error-center-block h1 {
-    font-size: 100px;
+    font-size: 20px;
 }
 
