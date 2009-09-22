@@ -14,15 +14,15 @@ class QException extends Exception
 
     }
 
-    public function ErrorHandler($message = "", $code = "", $severity = "", $filename = "", $lineno = "")
+    public function ErrorHandler($code = "", $message = "", $filename = "", $lineno = "")
     {
-        echo "QException throwed";
-        echo "<p>";
-        echo $this->message = $message;
-        echo $this->code = $code;
+        $this->message = $message;
+        $this->code = $code;
         $this->severity = $severity;
         $this->file = $filename;
         $this->line = $lineno;
+
+        new QWebException("Fatal error", $this->message);
 
         die();
     }
@@ -49,13 +49,18 @@ class QWebException extends Controller
     public function __construct($message = "", $tracelog = "")
     {
         $this->message = $message;
-        $this->code = $code;
+        $this->code = $code; // TODO: Remove, unsed
         $this->tracelog = $tracelog;
 
         $this->ViewName = "qxc_error";
 
         $this->View->title = "{$message} | Oops! an error occured";
         $this->View->message = $message;
+
+        if(DEBUG)
+        {
+            $this->View->trace = $tracelog;
+        }
 
         $this->View->Render();
 

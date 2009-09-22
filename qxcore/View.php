@@ -5,14 +5,13 @@ class View
     private $varsArray = array();
     private $viewName;    
 
-    function __construct($name = '', $vars = array())
+    function __construct($name = '')
     {
         if (! empty($name))
         {
             $this->viewName = strtolower($name) . '_view';
         }
-
-        $this->varsArray = $vars;
+        
         $this->varsArray['web_url'] = WEB_URL;
     }
 
@@ -59,45 +58,14 @@ class View
         }
         else
         {
-            throw new QWebException(404);
+            throw new QWebException("404 Page Not Found",
+                "/views/{$viewName} - doesn't exists!");
         }
 
-        // Begin output buffering
-        ob_start();
+        $qplex = new QPlex($vPath);        
+        $qplex->SetVars($this->varsArray);
 
-        extract($this->varsArray, EXTR_SKIP);
-
-        require_once ($vPath);
-
-        $output = ob_get_clean();
-
-        if (preg_match("/{[^}]+}/", $output) && count($this->varsArray) > 0)
-        {
-            $output = preg_replace(array_map(array($this, 'varsReplace'), array_keys($this->varsArray)), array_values($this->varsArray), $output);
-
-            if (preg_match_all("/{%[\s]?[\"\']+([^\"\']+)[\"\']+}/", $output, $matches))
-            {
-                foreach ($matches[1] as $val)
-                {
-                    $output = preg_replace("/{%[\s]?[\"\']+([^\"\']+)[\"\']+}/", new $this($val, $this->varsArray), $output, 1);
-                }
-            }
-        }
-
-        // Display erros, validation etc.
-        $errorsArray = QXC()->getGlobal(null, "ERRORS");
-
-        if (is_array($errorsArray) && (bool)count($errorsArray) && stristr($output, "<error>"))
-        {
-            $output = preg_replace("/<error>/", "<div class='error'>" . join("<br />", $errorsArray) . "</div>", $output);
-        }
-
-        return $output;
-    }
-
-    private function varsReplace($key)
-    {
-        return "/\{\\$" . $key . "\}/i";
+        return $qplex->Render();
     }
 
     /**

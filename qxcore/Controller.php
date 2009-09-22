@@ -68,6 +68,7 @@ class Controller extends QXCore
 
     private function loadView()
     {
+        // TODO: Remove this checking - not really need
         $vName = (empty($this->ViewName) ? get_class($this) : $this->ViewName);
 
         include_once (CORE_DIR . '/qxcore/View.php');

@@ -55,7 +55,7 @@ if (! function_exists('pr'))
 
         if ($terminate)
         {
-            die("Exec: " . et());
+            die("Exec: " . T());
         }
 
         echo("</pre>");
@@ -80,7 +80,7 @@ function rnd($min = 0, $max = 0)
     }
 }
 
-function et()
+function T()
 {
     return substr((microtime(true) - START_TIME), 0, 6);
 }
@@ -169,7 +169,8 @@ class QXCore
         }
         else
         {
-            throw new QWebException("404 Page Not Found", 404);
+            throw new QWebException("404 Page Not Found",
+                "/controllers/{$cFileName} - doesn't exists!");
         }
 
         include_once ($cPath);
@@ -186,17 +187,23 @@ class QXCore
             array_shift($this->queryStringArray);
             array_shift($this->queryStringArray);
 
+            // Automatically set View name
+            $controller->ViewName = ($cName == CORE_MAIN_CONTROLLER) ? strtolower("main") : strtolower("{$cName}/{$methodName}");
+            
             call_user_func_array(array($controller, $methodName), $this->queryStringArray);
         }
         else if(is_callable(array($controller, "Main")))
         {
             array_shift($this->queryStringArray);
+
+            $controller->ViewName = ($cName == CORE_MAIN_CONTROLLER) ? strtolower("main") : strtolower("{$cName}/main");
             
             call_user_func_array(array($controller, "Main"), $this->queryStringArray);
         }
         else
         {
-            // TODO write else statement
+            throw new QWebException("404 Page Not Found",
+                "/controllers/{$cName}/{$methodName} - doesn't exists!");
         }
     }
 

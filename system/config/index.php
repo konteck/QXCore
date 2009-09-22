@@ -48,6 +48,19 @@ class QConfig
     // Private Methods
     private function loadConfig()
     {
+        if(defined('DYNAMIC_CONFIG') && DYNAMIC_CONFIG == true)
+        {           
+
+            $hConfig = CONFIG_DIR . '/' . strtolower($_SERVER['SERVER_NAME']) . "." . CORE_CONFIG_EXTENSION;
+            
+            if(file_exists($hConfig))
+            {
+                $this->xmlObject = QXC()->Xml->Open($hConfig);
+
+                return null;
+            }
+        }
+
         $cPath = CONFIG_DIR . '/' . strtolower($this->configName) . "." . CORE_CONFIG_EXTENSION;
 
         $this->xmlObject = QXC()->Xml->Open($cPath);

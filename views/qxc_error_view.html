@@ -2,6 +2,12 @@
 
 <div class="error-center-block">
     <h1>{$message}</h1>
+
+    <?  if(!empty($trace)): ?>
+    <div class="error-trace-block">
+        {$trace}
+    </div>
+    <? endif; ?>
 </div>
 
 {% 'qxc_footer'}
