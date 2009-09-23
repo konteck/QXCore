@@ -125,7 +125,7 @@ class QXCore
             $this->GLOBALS['SESSION'] = &$_SESSION;
         }
 
-        $this->queryStringArray = $this->ParseQueryString();
+        $this->queryStringArray = $this->ParseURI();
 
         $_GET = $_POST = $_REQUEST = $_COOKIE = $_FILES = array();
     }
@@ -264,7 +264,7 @@ class QXCore
         }
     }
 
-    private function ParseQueryString()
+    private function ParseURI()
     {
         $str = $_SERVER['REQUEST_URI'];
             

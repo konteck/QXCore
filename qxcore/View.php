@@ -5,11 +5,16 @@ class View
     private $varsArray = array();
     private $viewName;    
 
-    function __construct($name = '')
+    function __construct($name = '', $vars = array())
     {
         if (! empty($name))
         {
             $this->viewName = strtolower($name) . '_view';
+        }
+
+        if ($vars && is_array($vars))
+        {
+            $this->varsArray = $vars;
         }
         
         $this->varsArray['web_url'] = WEB_URL;
