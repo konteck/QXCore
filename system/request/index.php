@@ -243,14 +243,18 @@ class QRequest
         return $this->ToString();
     }
 
-    private function cleanString($string)
+    private function cleanString($input)
     {
-        $str = $string;
-        $str = urldecode($str);
-        $str = strip_tags($str);
-//        $str = mysql_escape_string($str); //TODO: Fix - this function can be disabled
+        $input = htmlentities($input, ENT_QUOTES, 'UTF-8');
 
-        return trim($str);
+        if(get_magic_quotes_gpc())
+        {
+            $input = stripslashes($input);
+        }
+        
+        $input = strip_tags($input);
+
+        return trim($input);
     }
 
     protected function __get($name)
