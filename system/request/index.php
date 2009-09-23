@@ -248,7 +248,7 @@ class QRequest
         $str = $string;
         $str = urldecode($str);
         $str = strip_tags($str);
-        $str = mysql_escape_string($str);
+//        $str = mysql_escape_string($str); //TODO: Fix - this function can be disabled
 
         return trim($str);
     }
