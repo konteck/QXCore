@@ -1,6 +1,7 @@
 <?php
 
-class QPlex {
+class QPlex
+{
 
     private $tplPath;
     private $varsArray = array();
@@ -25,7 +26,7 @@ class QPlex {
          // Begin output buffering
         ob_start();
 
-        extract($this->varsArray, EXTR_SKIP);
+        extract($this->varsArray, EXTR_SKIP);        
 
         require_once ($this->tplPath);
 
@@ -40,7 +41,7 @@ class QPlex {
                 foreach ($matches[1] as $val)
                 {
                     // TODO: Remove relation with View
-                    $output = preg_replace("/{%[\s]?[\"\']+([^\"\']+)[\"\']+}/", new View($val, $this->varsArray), $output, 1);
+                    $output = preg_replace("/{%[\s]?[\"\']+([^\"\']+)[\"\']+}/", new QView($val, $this->varsArray), $output, 1);
                 }
             }
         }

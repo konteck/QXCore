@@ -1,7 +1,9 @@
 {% 'qxc_header'}
 
 <div class="error-center-block">
-    <h1>{$message}</h1>
+    <h1>{$title}</h1>
+
+    <h3>{$message}</h3>
 
     <?  if(!empty($trace)): ?>
     <div class="error-trace-block">
@@ -9,6 +11,15 @@
     </div>
     <? endif; ?>
 </div>
+
+<script type="text/javascript" src="{$web_url}/qxc/handler/shCore.js"></script>
+<script type="text/javascript" src="{$web_url}/qxc/handler/shBrushPhp.js"></script>
+<link type="text/css" rel="stylesheet" href="{$web_url}/qxc/handler/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="{$web_url}/qxc/handler/shThemeDefault.css"/>
+<script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = '{$web_url}/qxc/handler/clipboard.swf';
+        SyntaxHighlighter.all();
+</script>
 
 {% 'qxc_footer'}
 

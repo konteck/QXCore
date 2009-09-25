@@ -22,7 +22,12 @@ class QException extends Exception
         $this->file = $filename;
         $this->line = $lineno;
 
-        new QWebException("Fatal error", $this->message);
+        if (!empty ($this->file) && is_int($this->line))
+        {
+            $source = "<pre class='brush: php'>" . $this->getSource() . "</pre>";
+        }
+
+        new QWebException("Fatal error", $this->message, $source);
 
         die();
     }
@@ -38,6 +43,20 @@ class QException extends Exception
                 break;
         }
     }
+
+    private function getSource()
+    {
+        $range = 5;
+        
+        $dataArray = file($this->file);
+
+        for ($i = $this->line - $range; $i < $this->line + $range; $i++)
+        {
+            $str .= $dataArray[$i];
+        }
+
+        return $str;
+    }
 }
 
 class QWebException extends Controller
@@ -46,15 +65,13 @@ class QWebException extends Controller
     private $code;
     private $tracelog;
     
-    public function __construct($message = "", $tracelog = "")
+    public function __construct($title = "", $message = "", $tracelog = "")
     {
-        $this->message = $message;
+        $this->message = $title;
         $this->code = $code; // TODO: Remove, unsed
         $this->tracelog = $tracelog;
 
-        $this->ViewName = "qxc_error";
-
-        $this->View->title = "{$message} | Oops! an error occured";
+        $this->View->title = "{$title} | Oops! an error occured";
         $this->View->message = $message;
 
         if(DEBUG)
@@ -62,7 +79,7 @@ class QWebException extends Controller
             $this->View->trace = $tracelog;
         }
 
-        $this->View->Render();
+        $this->View('qxc_error')->Render();
 
         die();
     }

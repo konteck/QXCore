@@ -10,6 +10,35 @@ class QRequest
         
     }
 
+    protected function __get($name)
+    {
+        $methods = array
+        (
+            'POST',
+            'GET',
+            'FILE',
+            'COOKIE',
+            'SESSION'
+        );
+
+        $name = strtoupper($name);
+
+        if (isset($name) && in_array($name, $methods))
+        {
+            $objClone = clone $this;
+            $objClone->method = $name;
+
+            return $objClone;
+        }
+
+        throw new QException("{$name} not defined");
+    }
+
+    public function __toString()
+    {
+        return $this->ToString();
+    }   
+
     /**
      * @return Model Returns Model
      */
@@ -64,13 +93,15 @@ class QRequest
             $objClone = clone $this;
             $objClone->method = "SESSION";
             $objClone->tempVar = $this->QXC->getGlobal($name, 'SESSION');
+
+            return $objClone;
         }
         else
         {
             $_SESSION[$name] = $value;
+
+            return $this;
         }
-        
-        return $objClone;
     }
 
     /**
@@ -238,11 +269,6 @@ class QRequest
         }
     }
 
-    public function __toString()
-    {
-        return $this->ToString();
-    }
-
     private function cleanString($input)
     {
         $input = htmlentities($input, ENT_QUOTES, 'UTF-8');
@@ -255,27 +281,5 @@ class QRequest
         $input = strip_tags($input);
 
         return trim($input);
-    }
-
-    protected function __get($name)
-    {
-        $methods = array
-        (
-            'POST',
-            'GET',
-            'FILE',
-            'COOKIE',
-            'SESSION'
-        );
-
-        if (isset($name) && in_array(strtoupper($name), $methods))
-        {
-            $objClone = clone $this;
-            $objClone->method = "POST";
-
-            return $objClone;
-        }
-
-        throw new QException("{$name} not defined");
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-class View
+abstract class View
 {
-    private $varsArray = array();
-    private $viewName;    
+    protected $varsArray = array();
+    protected $viewName;
 
     function __construct($name = '', $vars = array())
     {
@@ -20,9 +20,14 @@ class View
         $this->varsArray['web_url'] = WEB_URL;
     }
 
+    function __toString()
+    {
+        return $this->content();
+    }
+
     public function Load($name)
     {
-        return new $this($name);
+        return new $this($name, $this->varsArray);
     }
 
     public function Render()
@@ -49,6 +54,30 @@ class View
         return $this;
     }
 
+    public function SetName($name)
+    {
+        if (! empty($name))
+        {
+            $this->viewName = strtolower($name) . '_view';
+        }
+    }
+
+    public function SetVar($name, $value)
+    {
+        if (! empty($name))
+        {
+            $this->varsArray[$name] = $value;
+        }
+    }
+
+    public function GetVar($name)
+    {
+        if (! empty($name))
+        {
+            return $this->varsArray[$name];
+        }
+    }
+
     private function loadView()
     {
         $viewName = "{$this->viewName}." . CORE_VIEW_EXT;
@@ -67,12 +96,14 @@ class View
                 "/views/{$viewName} - doesn't exists!");
         }
 
-        $qplex = new QPlex($vPath);        
-        $qplex->SetVars($this->varsArray);
+        $qplex = new QPlexer($vPath, $this->varsArray);
 
         return $qplex->Render();
     }
+}
 
+class QView extends View
+{
     /**
      * Magically set template data.
      *
@@ -81,10 +112,7 @@ class View
      */
     function __set($name, $value)
     {
-        if (! empty($name))
-        {
-            $this->varsArray[$name] = $value;
-        }
+        $this->SetVar($name, $value);
     }
 
     /**
@@ -95,11 +123,18 @@ class View
      */
     function __get($name)
     {
-        return $this->varsArray[$name];
+        return $this->GetVar($name);
     }
+}
 
-    function __toString()
+// TODO: Improve
+class QPlexer extends QPlex
+{
+    function __get($name)
     {
-        return $this->content();
+        if (isset($name) && ctype_alnum($name))
+        {
+            return QXC()->$name;            
+        }
     }
 }

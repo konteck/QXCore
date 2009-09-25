@@ -12,7 +12,7 @@
  * @property View           $View
  * @property QMode          $Model
  */
-class Controller extends QXCore
+abstract class Controller extends QXCore
 {	
     public $ModelName = '';  //TODO: delete this
     public $ViewName = '';
@@ -48,22 +48,32 @@ class Controller extends QXCore
         }
     }
 
-    private function loadModel()
+    public function View($name = '')
     {
-        $mName = (empty($ModelName) ? get_class($this) : $ModelName);
-        $mName = strtolower($mName);
+        $this->ViewName = $name;
 
-        $mPath = WEB_DIR . "/models/{$mName}_model." . CORE_PHP_EXT;
-
-        if (file_exists($mPath))
+        if($this->View == null)
         {
-            include_once (CORE_DIR . '/qxcore/Model.php');
-            include_once ($mPath);
-
-            $className = $mName . '_Model';
-
-            return new $className();
+            $this->View = $this->loadView();
         }
+
+        $this->View->SetName($name);
+
+        return $this->View;
+    }
+
+    public function Model($name = '')
+    {
+        $this->ModelName = $name;
+
+        if($this->Model == null)
+        {
+            $this->Model = $this->loadModel();
+        }
+
+        $this->Model->SetName($name);
+
+        return $this->Model;
     }
 
     private function loadView()
@@ -73,10 +83,21 @@ class Controller extends QXCore
 
         include_once (CORE_DIR . '/qxcore/View.php');
 
-        return new View($vName);
+        return new QView($vName);
     }
 
-    // TODO: remove?
+    private function loadModel()
+    {
+        $mName = (empty($this->ModelName) ? get_class($this) : $this->ModelName);
+
+        include_once (CORE_DIR . '/qxcore/Model.php');
+
+        $model = new QModel($mName);
+
+        return $model->Load();
+    }
+    
+    // TODO: Remove?
     private function loadExtension($name)
     {
         $mPath = WEB_DIR . "/modeles/{$name}_model." . CORE_PHP_EXT;
