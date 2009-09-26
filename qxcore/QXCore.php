@@ -187,8 +187,11 @@ class QXCore
             array_shift($this->queryStringArray);
             array_shift($this->queryStringArray);
 
-            // Automatically set View name
-            $controller->ViewName = ($cName == CORE_MAIN_CONTROLLER) ? strtolower("main") : strtolower("{$cName}/{$methodName}");
+            if(empty ($controller->ViewName))
+            {
+                // Automatically set View name
+                $controller->ViewName = ($cName == CORE_MAIN_CONTROLLER) ? strtolower("main") : strtolower("{$cName}/{$methodName}");
+            }
             
             call_user_func_array(array($controller, $methodName), $this->queryStringArray);
         }
@@ -196,7 +199,10 @@ class QXCore
         {
             array_shift($this->queryStringArray);
 
-            $controller->ViewName = ($cName == CORE_MAIN_CONTROLLER) ? strtolower("main") : strtolower("{$cName}/main");
+            if(empty ($controller->ViewName))
+            {
+                $controller->ViewName = ($cName == CORE_MAIN_CONTROLLER) ? strtolower("main") : strtolower("{$cName}/main");
+            }
             
             call_user_func_array(array($controller, "Main"), $this->queryStringArray);
         }

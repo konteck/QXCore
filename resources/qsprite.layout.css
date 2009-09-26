@@ -1,0 +1,292 @@
+/*
+
+QSprite.Layout
+based on Tripoli by David Hellsing
+Copyright (c) Alex Movsisyan
+
+****************************************************************************
+
+Layout Structure
+
+<body class="content l3">
+    <div id="wrapper">
+        <div id="header">
+
+        </div> <!-- #header -->
+        <div id="col1">
+
+        </div> <!-- #col1 -->
+        <div id="col2">
+
+        </div> <!-- #col2 -->
+        <div id="col3">
+
+        </div> <!-- #col3 -->
+        <div id="footer">
+
+        </div> <!-- #footer -->
+    </div>
+</body>
+
+****************************************************************************/
+        
+#wrapper
+{
+    position:relative;
+    width:76em;
+    text-align:left;
+    margin:0 auto;
+}
+
+#header
+{
+    position:relative;
+}
+
+#col1, #col2, #col3
+{
+    position:relative;
+    float:left;
+}
+
+* html #col1, * html #col2, * html #col3
+{
+    display:inline;
+}
+
+#footer
+{
+    clear:both;
+    float:left;
+    width:100%;
+    position:relative;
+}
+
+body.l1 #col3, body.l2 #col3, body.l3 #col3
+{
+    display:none;
+}
+
+body.l1 #col1
+{
+    width:49.5em;
+}
+
+body.l1 #col2
+{
+    width:24.5em;
+    float:right;
+}
+
+body.l2 #col1
+{
+    width:49.5em;
+    margin-left:26.5em;;
+}
+
+body.l2 #col2
+{
+    width:24.5em;
+    margin-left:-76em;
+}
+
+body.l3 #col1
+{
+    width:37em;
+}
+
+body.l3 #col2
+{
+    width:37em;
+    float:right;
+}
+
+body.l4 #col1
+{
+    width:24em;
+    margin-left:26em;
+}
+
+body.l4 #col2
+{
+    width:24em;
+    margin-left:-50em;
+}
+
+body.l4 #col3
+{
+    float:right;
+    width:24em;
+}
+
+body.l5 #col1
+{
+    width:48em;
+    margin-left:14em;
+}
+
+body.l5 #col2
+{
+    width:12em;
+    margin-left:-62em;
+}
+
+body.l6 #col1
+{
+    width:36em;
+    margin-left:20em;
+}
+
+body.l6 #col2
+{
+    width:18em;
+    margin-left:-56em;
+}
+
+body.l7 #col1
+{
+    width:48em;
+    margin-right:2em;
+}
+
+body.l7 #col2
+{
+    width:12em;
+}
+
+body.l8 #col1
+{
+    width:36em;
+    margin-right:2em;
+}
+
+body.l8 #col2
+{
+    width:18em;
+    margin-left:0;
+}
+
+body.l9 #col1
+{
+    width:36em;
+    float:right;
+}
+
+body.l9 #col2
+{
+    width:18em;
+}
+
+body.l9 #col3
+{
+    float:right;
+    width:18em;
+    margin-right:2em;
+}
+
+body.wide #wrapper
+{
+    font-size:125%;
+}
+
+body.wide #header
+{
+    font-size:80%;
+}
+
+body.wide #footer
+{
+    font-size:81%;
+}
+
+body.wide #col1 .content, body.wide #col2 .content, body.wide #col3 .content
+{
+    font-size:100%;
+    line-height:1.54;
+}
+
+/* \*/
+
+body.equal #wrapper
+{
+    overflow:hidden;
+    padding-bottom:0;
+}
+
+body.equal #col1, body.equal #col2, body.equal #col3
+{
+    margin-bottom:-32767px;
+    padding-bottom:32767px;
+}
+
+* html body.equal #wrapper
+{
+    padding-bottom:0;
+}
+
+/* */
+
+body.l1 #footer, body.l2 #footer, body.l3 #footer
+{
+    margin-bottom:0;
+}
+
+body.l5 #col3, body.l7 #col3
+{
+    float:right;
+    width:12em;
+}
+
+body.l6 #col3, body.l8 #col3
+{
+    float:right;
+    width:18em;
+}
+
+/*
+@media all and (min-width: 0px)
+{
+	body.l2 #col2
+	{
+		left:.5em;
+	}
+	
+	body.equal #col1, body.equal #col2, body.equal #col3
+	{
+		padding-bottom:0!important;
+		margin-bottom:0!important;
+	}
+	
+	body.equal #col1[id^="col1"]:before, body.equal #col2[id^="col2"]:before, body.equal #col3[id^="col3"]:before
+	{
+		content:'Q';
+		display:block;
+		background:inherit;
+		padding-top:32767px!important;
+		margin-bottom:-32767px!important;
+		height:0;
+	}
+}
+*/
+
+/* Test: Highlight columns
+---------------------------------------------------------------------------*/
+.test #header {
+    background: #bbb;
+}
+
+.test #col1 {
+    background: #ccc;
+}
+
+.test #col2 {
+    background: #666;
+}
+
+.test #col3 {
+    background: #ddd;
+}
+
+.test #footer {
+    background: #999;
+}
