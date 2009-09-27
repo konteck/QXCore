@@ -1,0 +1,100 @@
+/*
+
+QSprite.Form
+Copyright (c) Alex Movsisyan
+
+****************************************************************************
+
+****************************************************************************/
+
+.form,
+.form fieldset,
+.form label,
+.form legend {
+    margin:0;
+    padding: 0;
+    border: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+.form fieldset {
+    margin: 0 0 1.5em 0;
+    padding: 1.4em;
+}
+
+.form legend	{
+    padding: 0.4em;
+    font-size:1.2em;
+}
+
+.form label {
+    float:left;
+    width:9em;
+    display:block;
+    clear:left;
+    margin: 0.4em 0 0;
+    text-align:left;
+    cursor: pointer;
+}
+
+.form textarea,
+.form select,
+.form input[type="text"],
+.form input[type="password"],
+.form input[type="select"],
+.form input[type="search"] {
+    border: 1px solid #ccc;
+    height: 17px;
+    padding: 1px 2px;
+    margin-bottom: 1em;
+    display: block;
+}
+
+.form textarea {
+    padding: 0 2px;
+    display: block;
+    line-height: 18px;
+    width: 220px;
+    height: 100px;
+}
+
+.form input[type="checkbox"],
+.form input[type="radio"] {
+    margin-bottom:7px;
+}	
+
+.form fieldset {
+    border: none; 
+    margin: 0; 
+    padding: 0; 
+}
+
+.form legend {
+    color: #333; 
+    font-weight: bold;
+    font-size: 100%;
+    margin: 0;
+    padding: 1.5em 0;
+}
+
+/* Top aligned labels
+---------------------------------------------------------------------------*/
+
+.top-aligned textarea,
+.top-aligned select,
+.top-aligned input[type="text"],
+.top-aligned input[type="password"],
+.top-aligned input[type="select"],
+.top-aligned input[type="search"] {
+    margin-top: 0.4em;
+    float:left;
+    clear:both;
+}
+
+
+
+

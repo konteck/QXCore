@@ -1,25 +1,51 @@
-{% 'qxc_header'}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>{$title} / Oops! an error occurred</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="{$web_url}/qxc/handler/qsprite.css" type="text/css" />
+    <link rel="stylesheet" href="{$web_url}/qxc/handler/qsprite.layout.css" type="text/css" />
+    <link rel="stylesheet" href="{$web_url}/qxc/handler/qsprite.form.css" type="text/css" />
+    <link rel="stylesheet" href="{$web_url}/qxc/handler/qxcore.css" type="text/css" />
 
-<div class="error-center-block">
-    <h1>{$title}</h1>
-
-    <h3>{$message}</h3>
-
-    <?  if(!empty($trace)): ?>
-    <div class="error-trace-block">
-        {$trace}
-    </div>
-    <? endif; ?>
-</div>
-
-<script type="text/javascript" src="{$web_url}/qxc/handler/shCore.js"></script>
-<script type="text/javascript" src="{$web_url}/qxc/handler/shBrushPhp.js"></script>
-<link type="text/css" rel="stylesheet" href="{$web_url}/qxc/handler/shCore.css"/>
-<link type="text/css" rel="stylesheet" href="{$web_url}/qxc/handler/shThemeDefault.css"/>
-<script type="text/javascript">
+    <script type="text/javascript" src="{$web_url}/qxc/handler/shCore.js"></script>
+    <script type="text/javascript" src="{$web_url}/qxc/handler/shBrushPhp.js"></script>
+    <link rel="stylesheet" href="{$web_url}/qxc/handler/shCore.css" type="text/css" />
+    <link rel="stylesheet" href="{$web_url}/qxc/handler/shThemeDefault.css" type="text/css" />
+    <script type="text/javascript">
         SyntaxHighlighter.config.clipboardSwf = '{$web_url}/qxc/handler/clipboard.swf';
+        SyntaxHighlighter.defaults['highlight'] = 4;
         SyntaxHighlighter.all();
-</script>
+    </script>
+</head>
+<body class="content one-col" id="">
+    <div id="wrapper">
+        <div id="header">
+            <img src="{$web_url}/qxc/handler/logo.png" width="250" height="100" alt="logo"/>
+        </div> <!-- #header -->
+        <div id="col1">
+            <div class="error-center-block">
+                <h1>{$title}</h1>
 
-{% 'qxc_footer'}
+                <h3>{$message}</h3>
+
+                <?  if(!empty($trace)): ?>
+                <div class="error-trace-block">
+                    {$trace}
+                </div>
+                <? endif; ?>
+            </div>
+        </div> <!-- #col1 -->
+        <div id="col2">
+                {$col2}
+        </div> <!-- #col2 -->
+        <div id="col3">
+		{col3}
+        </div> <!-- #col3 -->
+        <div id="footer">
+		{$footer}
+        </div> <!-- #footer -->
+    </div>
+</body>
+</html>
 

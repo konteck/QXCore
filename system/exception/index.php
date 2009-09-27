@@ -24,7 +24,7 @@ class QException extends Exception
 
         if (!empty ($this->file) && is_int($this->line))
         {
-            $source = "<pre class='brush: php'>" . $this->getSource() . "</pre>";
+            $source = $this->codeHighlight();
         }
 
         new QWebException("Fatal error", $this->message, $source);
@@ -44,18 +44,43 @@ class QException extends Exception
         }
     }
 
-    private function getSource()
+    private function codeHighlight()
     {
-        $range = 5;
-        
+        $propArray = array
+        (
+            "brush" => "php",
+            "highlight" => 0,
+            "first-line" => 1,
+            "font-size" => "100%'"
+        );
+
+        $rangeSize = 5;
+
         $dataArray = file($this->file);
 
-        for ($i = $this->line - $range; $i < $this->line + $range; $i++)
+        if(count($dataArray) > $rangeSize * 2)
         {
-            $str .= $dataArray[$i];
-        }
+            $propArray['first-line'] = $this->line - $rangeSize - 1;
+            $propArray['highlight'] = $this->line;
 
-        return $str;
+            $str = "<?php\n";
+
+            for ($i = $this->line - $rangeSize; $i <= $this->line + $rangeSize; $i++)
+            {
+                $str .= $dataArray[$i - 1];
+            }
+        }
+        else
+        {
+            $str = $dataArray[$line];
+        }      
+
+        // Join Params
+        array_walk($propArray, create_function('&$v,$k', '$v=" $k: $v";'));
+
+        $code = sprintf( "<pre class='%s'>%s</pre>", join(";", $propArray), htmlentities($str));
+
+        return $code;
     }
 }
 
@@ -71,7 +96,7 @@ class QWebException extends Controller
         $this->code = $code; // TODO: Remove, unsed
         $this->tracelog = $tracelog;
 
-        $this->View->title = "{$title} | Oops! an error occured";
+        $this->View->title = $title;
         $this->View->message = $message;
 
         if(DEBUG)

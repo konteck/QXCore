@@ -10,9 +10,7 @@ class QXC extends Controller
     public function Main()
     {
         $this->View->title = "Hello World!";
-        $this->View->header = $this->View->Load('qxc_header');
-        $this->View->footer = $this->View->Load('qxc_footer');
-        $this->View->Render();
+        $this->View('qxc')->Render();
     }
 
     public function Handler($resource)

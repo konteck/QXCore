@@ -1,33 +1,23 @@
-/* 
-    Document   : qxcore
-    Created on : 24.08.2009, 21:57:21
-    Author     : Alex
-    Description:
-        Purpose of the stylesheet follows.
-*/
+/*
 
-html, body {
-    height:100%;
-}
+QXCore.Main
+Copyright (c) Alex Movsisyan
 
+****************************************************************************
 
-body {
-    margin: 0;
-    padding: 0;
+****************************************************************************/
+
+#wrapper {
+    width: 100%;
 }
 
 #header {
-    position: relative;
-    width: 100%;
     height: 190px;
-    /*background: transparent url('header-background.jpg') repeat-x scroll center;*/
+    background: transparent url('header-background-grass.jpg') repeat-x scroll center;
 }
 
-h1 {
-    padding: 0;
-    margin: 5px;
-    font-family:"Georgia","Courier New",Courier,monospace;
-}
+/* Page elements
+---------------------------------------------------------------------------*/
 
 .search-box {
     width: 400px;
@@ -47,7 +37,7 @@ h1 {
 }
 
 /* Push footer to page bottom
----------------------------------------------------------------------------*/
+---------------------------------------------------------------------------
 #wrapper {
     position:relative;
     min-height:100%;
@@ -59,6 +49,7 @@ h1 {
 #footer, #push {
     height:4em;
 }
+*/
 
 /* Error page
 ---------------------------------------------------------------------------*/

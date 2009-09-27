@@ -44,6 +44,8 @@ class QPlex
                     $output = preg_replace("/{%[\s]?[\"\']+([^\"\']+)[\"\']+}/", new QView($val, $this->varsArray), $output, 1);
                 }
             }
+
+            $output = preg_replace("/{\s?\\$[^}]+}/", "", $output);
         }
 
         // Display erros, validation etc.
