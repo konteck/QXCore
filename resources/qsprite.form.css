@@ -36,36 +36,59 @@ Copyright (c) Alex Movsisyan
     width:9em;
     display:block;
     clear:left;
-    margin: 0.4em 0 0;
+    margin: 0.3em 0 0;
     text-align:left;
     cursor: pointer;
 }
 
 .form textarea,
 .form select,
+.form input,
+.form input[type="select"],
 .form input[type="text"],
 .form input[type="password"],
-.form input[type="select"],
+.form input[type="search"] {
+    /*float:left;*/
+}
+
+.form textarea,
+.form input[type="text"],
+.form input[type="password"],
 .form input[type="search"] {
     border: 1px solid #ccc;
-    height: 17px;
+    height: auto;
     padding: 1px 2px;
     margin-bottom: 1em;
     display: block;
 }
 
-.form textarea {
-    padding: 0 2px;
-    display: block;
-    line-height: 18px;
-    width: 220px;
-    height: 100px;
+.form input[type="text"],
+.form input[type="password"],
+.form input[type="search"] {
+    height: 1.3em;
 }
 
 .form input[type="checkbox"],
 .form input[type="radio"] {
-    margin-bottom:7px;
-}	
+    margin-right: 0.4em;
+    /*margin-bottom: 1em;*/
+}
+
+.form select,
+.form input[type="select"] {
+    padding: 1px 2px;   
+    display: block;
+    margin-bottom: 1em;
+    margin-right: 0.7em;
+    clear: right
+}
+
+.form textarea {
+    padding: 0 2px;
+    line-height: 18px;
+    width: 220px;
+    height: 100px;
+}
 
 .form fieldset {
     border: none; 
@@ -81,6 +104,30 @@ Copyright (c) Alex Movsisyan
     padding: 1.5em 0;
 }
 
+.form hr {
+    clear: right;
+}
+
+.form span {
+    display: block;
+    margin-bottom: 1em;
+}
+
+.form span select,
+.form span textarea,
+.form span input {
+    margin-bottom: 0 !important;
+    display: inline !important;
+}
+
+/* Right aligned labels
+---------------------------------------------------------------------------*/
+
+.right-aligned label {
+    text-align: right;
+    padding-right: 0.5em;
+}
+
 /* Top aligned labels
 ---------------------------------------------------------------------------*/
 
@@ -92,9 +139,16 @@ Copyright (c) Alex Movsisyan
 .top-aligned input[type="search"] {
     margin-top: 0.4em;
     float:left;
-    clear:both;
 }
 
+.top-aligned label {
+    clear: both;
+    float: none;
+}
 
+/* Test: Highlight elements
+---------------------------------------------------------------------------*/
 
-
+.test fieldset, #test fieldset {
+    background: #ddd;
+}
