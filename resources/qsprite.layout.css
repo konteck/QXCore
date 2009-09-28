@@ -48,6 +48,7 @@ Layout Structure
     float: left;
     padding: 0 0 1em;
     overflow: hidden;
+    vertical-align: top;
 }
 
 * html #col1, * html #col2, * html #col3 {
