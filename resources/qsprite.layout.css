@@ -87,7 +87,8 @@ Layout Structure
 }
 
 .two-col #col2 {
-    width: 78%;
+    width: auto;
+    min-width: 78%;
 }
 
 .two-col #col3 {
