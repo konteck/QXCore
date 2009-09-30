@@ -16,7 +16,7 @@ Copyright (c) Alex Movsisyan
 }
 
 .qtoolbar {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     height: 31px;
     width: 90%;
