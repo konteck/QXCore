@@ -2,6 +2,8 @@
 
 class QXC extends Controller
 {
+    private $basePath;
+    
     function __construct()
     {
 
@@ -15,27 +17,48 @@ class QXC extends Controller
 
     public function Handler($resource)
     {
-        $filePath = CORE_DIR . "/resources/{$resource}";
-
-        header("Content-Type: {$this->GetFileType($filePath)}");
-
-        if(file_exists($filePath))
+        if(!empty ($this->basePath))
         {
-            echo file_get_contents($filePath); // TODO improve read function
-        }
-    }
-
-    public function Captcha($type = '')
-    {
-        // TODO: Rewrite
-
-        if ($type == 'audio')
-        {
-            
+            $filePath = $this->basePath . "/{$resource}";
         }
         else
         {
-            QXC()->Captcha->Render();
+            $filePath = CORE_DIR . "/resources/{$resource}";
+        }   
+
+        if(file_exists($filePath))
+        {
+            header("Content-Type: {$this->GetFileType($filePath)}");
+
+            echo file_get_contents($filePath); // TODO improve read function
+        }
+        else
+        {
+            die("Resource not found!");
+        }
+    }
+
+    public function Captcha($type = '', $file = '')
+    {
+        switch ($type)
+        {
+            case 'image':
+                QXC()->Captcha->Render();
+                break;
+            case 'audio':
+                if($file == "voice.swf")
+                {
+                    $this->basePath = CORE_DIR . "/system/captcha/resources";
+                    $this->Handler("voice.swf");
+                }
+                else
+                {
+                    QXC()->Captcha->Play();
+                }
+                break;
+            default:
+                echo QXC()->Captcha->GetCode();
+                break;
         }
     }
 

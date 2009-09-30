@@ -23,6 +23,8 @@ class QCaptcha
         array(214,36,7),  // red
     );
 
+    private $mp3dir;
+
     function __construct()
     {
         // Set default values
@@ -31,6 +33,7 @@ class QCaptcha
         $this->dic = CORE_DIR . "/system/captcha/dictionary/words-en.dic";
         $this->format = IMG_PNG;
         $this->background = "captcha-back.png";
+        $this->mp3dir = CORE_DIR . "/system/captcha/audio";
     }
 
     public function SetSize($x, $y)
@@ -47,25 +50,47 @@ class QCaptcha
         }
     }
 
+    public function Play()
+    {
+        $text = (string)$this->QXC->Request->Session('qxc_captcha_text');
+        
+        if (empty ($text))
+        {
+            $text = $this->GenWord();
+        }
+
+        $size = 0;
+
+        for ($i = 0; $i < strlen($text); $i++)
+        {
+            $mp3 .= $this->GetAudio($text[$i], &$size);
+        }
+
+        // Send the generated mp3 file
+        header("Pragma: no-cache");
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Content-Type: audio/mpeg');
+        header("Content-Disposition: attachment; filename=\"validate.mp3\"");
+        header("Content-Transfer-Encoding: binary");
+        header("Content-length: {$size}");
+
+        die($mp3);
+    }
+
     public function Render()
     {
-        // Text
-        $lines = file($this->dic, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES | FILE_TEXT);
-        $linesNum = count($lines) - 1;
-
-        shuffle($lines);
-
-        $prefix = $lines[rnd($linesNum)];
-        $postfix = $lines[rnd($linesNum)];
-
-        $text = rtrim($prefix) . rtrim($postfix);
-
-        $this->QXC->Request->Session('qxc_captcha_text', $text);
-
+        $text = $this->GenWord();
+        
         $this->InitImage();
         $this->SetBackground();
         $this->SetText($text);
         $this->WaveImage();
+
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
         
         switch ($this->format)
         {
@@ -104,6 +129,48 @@ class QCaptcha
         {
             return false;
         }
+    }
+
+    public function GetCode()
+    {
+        $baseUrl = WEB_URL;
+        $textSize = $this->width - 50;
+
+        $str = "<img src=\"{$baseUrl}/qxc/captcha/image\" width=\"{$this->width}\" height=\"{$this->height}\" alt=\"code\" style=\"display:block\" />";
+        $str .= "<input type=\"text\" name=\"secretcode\" style=\"width: {$textSize}px;margin-right:3px\" />";
+        $str .= "<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"50\" height=\"57\" id=\"voice\" align=\"middle\">";
+        $str .= " <param name=\"allowScriptAccess\" value=\"sameDomain\" />";
+        $str .= " <param name=\"allowFullScreen\" value=\"false\" />";
+        $str .= " <param name=\"movie\" value=\"{$baseUrl}/qxc/captcha/audio/voice.swf\" />";
+        $str .= " <param name=\"loop\" value=\"false\" />";
+        $str .= " <param name=\"menu\" value=\"false\" />";
+        $str .= " <param name=\"quality\" value=\"high\" />";
+        $str .= " <param name=\"scale\" value=\"noscale\" />";
+        $str .= " <param name=\"flashvars\" value=\"webUrl={$baseUrl}\" />";
+        $str .= " <param name=\"wmode\" value=\"transparent\" />";
+        $str .= " <param name=\"bgcolor\" value=\"#ffffff\" />";
+        $str .= "<embed src=\"{$baseUrl}/qxc/captcha/audio/voice.swf\" flashvars=\"webUrl={$baseUrl}\" loop=\"false\" menu=\"false\" quality=\"high\" scale=\"noscale\" wmode=\"transparent\" bgcolor=\"#ffffff\" width=\"50\" height=\"57\" name=\"voice\" align=\"middle\" allowScriptAccess=\"sameDomain\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\" />";
+        $str .= "</object>";
+
+        return $str;
+    }
+    
+    private function GenWord()
+    {
+        // Text
+        $lines = file($this->dic, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES | FILE_TEXT);
+        $linesNum = count($lines) - 1;
+
+        shuffle($lines);
+
+        $prefix = $lines[rnd($linesNum)];
+        $postfix = $lines[rnd($linesNum)];
+
+        $text = rtrim($prefix) . rtrim($postfix);
+
+        $this->QXC->Request->Session('qxc_captcha_text', $text);
+
+        return $text;
     }
 
     private function InitImage()
@@ -177,6 +244,26 @@ class QCaptcha
         {
             imagecopy($this->im, $this->im, sin($k+$i/$yp) * ($this->scale*$this->Yamplitude), $i-1, 0, $i, $this->width*$this->scale, 1);
         }
+    }
+
+    private function GetAudio($letter, &$totalSize)
+    {
+
+        $letter = strtolower($letter);
+
+        if(!file_exists("{$this->mp3dir}/{$letter}.mp3"))
+            return;
+
+        $handle = fopen("{$this->mp3dir}/{$letter}.mp3", "rb"); // Read as binary
+        $size = filesize("{$this->mp3dir}/{$letter}.mp3");
+
+        $totalSize += $size;
+
+        $data = stream_get_line($handle, $size);
+
+        @fclose($handle);
+
+        return $data;
     }
 
     private function ReadDir($dir, $ext = "")

@@ -17,7 +17,7 @@ class Toolbar
         $str .= "\n";
         $str .= '<link rel="stylesheet" href="{$web_url}/qxc/toolbar/toolbar.css" type="text/css" />';
         $str .= "\n";
-        $str .= '<div class="qtoolbar"><div class="left">&nbsp;</div<div class="right">&nbsp;</div><div class="middle">';
+        $str .= '<div class="qtoolbar"><div class="left">&nbsp;</div><div class="right">&nbsp;</div><div class="middle">';
         $str .= '<div>';
         $str .= $this->data;
         $str .= '</div>';
