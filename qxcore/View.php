@@ -80,23 +80,23 @@ abstract class View
 
     private function loadView()
     {
-        $viewName = "{$this->viewName}." . CORE_VIEW_EXT;
+        $viewPath = "/views/{$this->viewName}." . CORE_VIEW_EXT;
 
-        if (file_exists(WEB_DIR . "/views/{$viewName}"))
+        if (file_exists(WEB_DIR . $viewPath))
         {
-            $vPath = WEB_DIR . "/views/{$viewName}";
+            $viewPath = WEB_DIR . $viewPath;
         }
-        else if(file_exists(CORE_DIR . "/views/{$viewName}"))
+        else if(file_exists(CORE_DIR . $viewPath))
         {
-            $vPath = CORE_DIR . "/views/{$viewName}";
+            $viewPath = CORE_DIR . $viewPath;
         }
         else
         {
             throw new QWebException("404 Page Not Found",
-                "/views/{$viewName} - doesn't exists!");
+                "/views/{$this->viewName} - doesn't exists!");
         }
 
-        $qplex = new QPlexer($vPath, $this->varsArray);
+        $qplex = new QPlexer($viewPath, $this->varsArray);
 
         return $qplex->Render();
     }

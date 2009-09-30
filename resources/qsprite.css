@@ -12,11 +12,11 @@ Copyright (c) Alex Movsisyan
 ---------------------------------------------------------------------------*/
 
 * {
-    text-decoration:none;
-    font-size:1em;
-    outline:none;
-    margin:0;
-    padding:0;
+    text-decoration: none;
+    font-size: 1em;
+    outline: none;
+    margin: 0;
+    padding: 0;
 }
 
 code,
@@ -463,7 +463,7 @@ input[type='hidden']
 .content input[type='radio']
 {
     position:relative;
-    bottom:-.2em;
+    bottom: -.1em;
 }
 
 .content dt

@@ -32,6 +32,12 @@ class QPlex
 
         $output = ob_get_clean();
 
+        // Display toolbar
+        if (DEBUG)
+        {
+            $output = preg_replace("/<\/body>/", "{$this->Module->Toolbar->Render()}</body>", $output);
+        }
+        
         if (preg_match("/{[^}]+}/", $output) && count($this->varsArray) > 0)
         {
             $output = preg_replace(array_map(array($this, 'varsReplace'), array_keys($this->varsArray)), array_values($this->varsArray), $output);

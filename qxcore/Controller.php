@@ -10,12 +10,14 @@
  * @property QRequest       $Request
  * @property QResponse      $Response
  * @property View           $View
- * @property QMode          $Model
+ * @property Model          $Model
+ * @property Module         $Module
  */
 abstract class Controller extends QXCore
 {	
-    public $ModelName = '';  //TODO: delete this
-    public $ViewName = '';
+    public $ModelName;
+    public $ViewName;
+    private $ModuleName;
 
     function __construct()
     {
@@ -33,11 +35,6 @@ abstract class Controller extends QXCore
                     break;
                 case 'view' :
                     $this->$name = $this->loadView();
-                    break;
-                case 'user' :
-                    include_once (CORE_DIR . '/qxcore/Modules.php');
-
-                    $this->$name = new UserModules();
                     break;
                 default :
                     parent::__get($name);
@@ -95,20 +92,5 @@ abstract class Controller extends QXCore
         $model = new QModel($mName);
 
         return $model->Load();
-    }
-    
-    // TODO: Remove?
-    private function loadExtension($name)
-    {
-        $mPath = WEB_DIR . "/modeles/{$name}_model." . CORE_PHP_EXT;
-
-        if (file_exists($mPath))
-        {
-            include_once ($mPath);
-
-            $className = $name . '_View';
-
-            $this->$name = new $className();
-        }
     }
 }

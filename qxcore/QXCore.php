@@ -256,7 +256,7 @@ class QXCore
     }
 
     // Private Methods
-    private function LoadModule($name)
+    private function loadExtension($name)
     {
         $extPath = CORE_DIR . '/system/' . strtolower($name) . '/index.php';
 
@@ -286,12 +286,24 @@ class QXCore
         return array_map(create_function('$str', 'return (preg_match("/^[\w\-\.]{1,50}$/", trim($str)))?$str:NULL;'), $parts);
     }
 
+    private function loadModule()
+    {
+        include_once (CORE_DIR . '/qxcore/Module.php');
+
+        return new QModule();
+    }
+
     // Magic Methods
     protected function __get($name)
     {
         if (isset($name) && ctype_alnum($name))
         {
-            $this->LoadModule($name);
+            if(strtolower($name) == 'module')
+            {
+                return $this->$name = $this->loadModule();
+            }
+            
+            $this->loadExtension($name);
 
             $qname = "Q{$name}";
 

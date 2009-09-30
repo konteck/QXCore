@@ -36,22 +36,14 @@ Copyright (c) Alex Movsisyan
     width:9em;
     display:block;
     clear:left;
-    margin: 0.3em 0 0;
+    margin: 0.2em 0 0;
     text-align:left;
     cursor: pointer;
+    font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,Sans-Serif;
 }
 
 .form textarea,
-.form select,
-.form input,
-.form input[type="select"],
-.form input[type="text"],
-.form input[type="password"],
-.form input[type="search"] {
-    /*float:left;*/
-}
-
-.form textarea,
+.form input[type="file"],
 .form input[type="text"],
 .form input[type="password"],
 .form input[type="search"] {
@@ -76,11 +68,14 @@ Copyright (c) Alex Movsisyan
     height: 1.3em;
 }
 
-.form input[type="checkbox"],
+.form input[type="checkbox"] {
+    margin-top: 0.2em;
+}
+
 .form input[type="radio"] {
-    padding: 0;
-    margin-right: 0.4em;
-    vertical-align: -5px;
+    /*margin-top: 0.1em;*/
+    /*margin-right: 0.4em;*/
+    /*vertical-align: -5px;*/
     /*margin-top: 6px;*/
 }
 

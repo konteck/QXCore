@@ -1,0 +1,54 @@
+/*
+
+QToolbar
+Copyright (c) Alex Movsisyan
+
+****************************************************************************
+
+****************************************************************************/
+
+/* Reset
+---------------------------------------------------------------------------*/
+
+.qtoolbar * {
+    padding: 0;
+    margin: 0;
+}
+
+.qtoolbar {
+    position: absolute;
+    bottom: 0;
+    height: 31px;
+    width: 90%;
+    margin: auto;
+    margin-left: -45%;
+    left: 50%;
+    font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,Sans-Serif;
+    /*background: #f3f3f3;*/
+}
+
+.qtoolbar .left {
+    float: left;
+    width: 14px;
+    height: 100%;
+    background: transparent url(corner-left.png) no-repeat scroll center center;
+}
+
+.qtoolbar .right {
+    float: right;
+    width: 14px;
+    height: 100%;
+    background: transparent url(corner-right.png) no-repeat scroll center center;
+}
+
+.qtoolbar .middle {
+    margin: auto;
+    height: 100%;
+    text-align: right;
+    color: #000;
+    background: #f3f3f3 url(back.png) repeat-x scroll center center;
+}
+
+.qtoolbar .middle div {
+    padding: 8px;
+}

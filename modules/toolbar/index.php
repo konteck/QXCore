@@ -1,21 +1,35 @@
 <?php
 
-class QXC extends Controller
+class Toolbar
 {
+    private $data;
+    
     function __construct()
     {
 
     }
 
-    public function Main()
+    public function Render()
     {
-        $this->View->title = "Hello World!";
-        $this->View('qxc')->Render();
+        $this->Initialize();
+        
+        $str = '<script type="text/javascript" src="{$web_url}/qxc/toolbar/handler/toolbar.js"></script>';
+        $str .= "\n";
+        $str .= '<link rel="stylesheet" href="{$web_url}/qxc/toolbar/toolbar.css" type="text/css" />';
+        $str .= "\n";
+        $str .= '<div class="qtoolbar"><div class="left">&nbsp;</div<div class="right">&nbsp;</div><div class="middle">';
+        $str .= '<div>';
+        $str .= $this->data;
+        $str .= '</div>';
+        $str .= '</div></div>';
+        $str .= "\n";
+
+        return $str;
     }
 
-    public function Handler($resource)
+    public function Handler($resource = '')
     {
-        $filePath = CORE_DIR . "/resources/{$resource}";
+        $filePath = $this->PATH . "/resources/{$resource}";
 
         header("Content-Type: {$this->GetFileType($filePath)}");
 
@@ -23,25 +37,28 @@ class QXC extends Controller
         {
             echo file_get_contents($filePath); // TODO improve read function
         }
-    }
-
-    public function Captcha($type = '')
-    {
-        // TODO: Rewrite
-
-        if ($type == 'audio')
-        {
-            
-        }
         else
         {
-            QXC()->Captcha->Render();
+            die("File not found!");
         }
     }
 
-    public function Toolbar($file = '')
+    private function Initialize()
     {
-        $this->Module->Toolbar->Handler($file);
+        $this->data = "Time: " . T();
+        $this->data .= " Memory: " . $this->GetMemoryUsage();
+    }
+
+    private function GetMemoryUsage() 
+    {
+        $mem_usage = memory_get_usage(true);
+
+        if ($mem_usage < 1024)
+            return $mem_usage." b";
+        elseif ($mem_usage < 1048576)
+            return round($mem_usage/1024,2) . " Kb";
+        else
+            return round($mem_usage/1048576,2) . " Mb";
     }
 
     private function GetFileType($filename)
@@ -102,7 +119,7 @@ class QXC extends Controller
         );
 
         $ext = strtolower(trim(array_pop(explode('.',$filename))));
-        
+
         if (array_key_exists($ext, $mimeTypes))
         {
             return $mimeTypes[$ext];
