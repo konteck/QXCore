@@ -45,7 +45,7 @@ class Toolbar
 
     private function Initialize()
     {
-        $this->data = "Time: " . T();
+        $this->data = "Time: " . T() . "s";
         $this->data .= " Memory: " . $this->GetMemoryUsage();
     }
 

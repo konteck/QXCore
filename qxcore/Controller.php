@@ -60,17 +60,11 @@ abstract class Controller extends QXCore
     }
 
     public function Model($name = '')
-    {
-        $this->ModelName = $name;
+    {    
+        $model = $this->loadModel($name);
+        $model->SetName($name);
 
-        if($this->Model == null)
-        {
-            $this->Model = $this->loadModel();
-        }
-
-        $this->Model->SetName($name);
-
-        return $this->Model;
+        return $model;
     }
 
     private function loadView()
@@ -83,9 +77,9 @@ abstract class Controller extends QXCore
         return new QView($vName);
     }
 
-    private function loadModel()
+    private function loadModel($name = '')
     {
-        $mName = (empty($this->ModelName) ? get_class($this) : $this->ModelName);
+        $mName = (empty($name) ? (empty($this->ModelName) ? get_class($this) : $this->ModelName) : $name);
 
         include_once (CORE_DIR . '/qxcore/Model.php');
 

@@ -10,7 +10,7 @@ abstract class Model extends QXCore
     {
         if (! empty($name))
         {
-            $this->modelName = strtolower($name) . '_model';
+            $this->modelName = strtolower($name);
         }
     }
 
@@ -57,24 +57,26 @@ abstract class Model extends QXCore
 
     private function loadModel()
     {
-        $mName = "{$this->modelName}." . CORE_PHP_EXT;
+        $modelName = "{$this->modelName}_model." . CORE_PHP_EXT;
 
-        if (file_exists(WEB_DIR . "/models/{$mName}"))
+        if (file_exists(WEB_DIR . "/models/{$modelName}"))
         {
-            $mPath = WEB_DIR . "/models/{$mName}";
+            $modelPath = WEB_DIR . "/models/{$modelName}";
         }
-        else if(file_exists(CORE_DIR . "/models/{$mName}"))
+        else if(file_exists(CORE_DIR . "/models/{$modelName}"))
         {
-            $mPath = CORE_DIR . "/models/{$mName}";
+            $modelPath = CORE_DIR . "/models/{$modelName}";
         }
         else
         {
-            throw new QException("Model {$mName} not found");
+            throw new QException("Model '{$modelName}' not found");
         }
 
-        include_once ($mPath);
+        include_once ($modelPath);
 
-        $this->modelObject = new $this->modelName();
+        $mName = "{$this->modelName}Model";
+
+        $this->modelObject = new $mName();
         $this->modelObject->Set($this->varsArray);
         $this->modelObject->varsArray = &$this->modelObject->Db->Parameters; // TODO: I need this?
         
@@ -86,7 +88,14 @@ class QModel extends Model
 {
     public function __call($name,  $arguments)
     {
-        $result = call_user_func_array(array($this->modelObject, $name), $arguments);
+        if (is_callable(array($this->modelObject, $name)))
+        {
+            $result = call_user_func_array(array($this->modelObject, $name), $arguments);
+        }
+        else
+        {
+            throw new QException("Model '{$this->modelName}' doesn't contain method '{$name}'");
+        }
         
         return $result;
     }

@@ -391,7 +391,7 @@ input[type='hidden']
     border-collapse:collapse;
 }
 
-.content hr,
+/*.content hr,
 .content p,
 .content ul,
 .content ol,
@@ -403,7 +403,7 @@ input[type='hidden']
 {
     margin-bottom: 1.5em;
 }
-
+*/
 .content p+p
 {
     margin-top:-.8em;
@@ -485,5 +485,9 @@ input[type='hidden']
 .content ul ul, content ol ul, .content ul ol, content ol ol
 {
     margin-bottom:0;
+}
+
+.content br {
+    clear: left;
 }
 

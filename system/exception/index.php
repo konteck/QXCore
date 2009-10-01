@@ -2,16 +2,14 @@
 
 class QException extends Exception
 {
-    protected $severity;
-    
-    public function getSeverity()
+    function __construct($message = "")
     {
-        return $this->severity;
-    }
+        if (is_string($message))
+        {
+            $this->message = $message;
 
-    function __construct()
-    {
-
+            $this->throwQWebException();
+        }
     }
 
     public function ErrorHandler($code = "", $message = "", $filename = "", $lineno = "")
@@ -22,14 +20,7 @@ class QException extends Exception
         $this->file = $filename;
         $this->line = $lineno;
 
-        if (!empty ($this->file) && is_int($this->line))
-        {
-            $source = $this->codeHighlight();
-        }
-
-        new QWebException("Fatal error", $this->message, $source);
-
-        die();
+        $this->throwQWebException();
     }
 
     public function ExceptionHandler($ex)
@@ -42,6 +33,16 @@ class QException extends Exception
             default:
                 break;
         }
+    }
+
+    private function throwQWebException()
+    {
+        if (!empty ($this->file) && is_int($this->line))
+        {
+            $source = $this->codeHighlight();
+        }
+
+        new QWebException("Fatal error", $this->message, $source);
     }
 
     private function codeHighlight()
