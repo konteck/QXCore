@@ -32,7 +32,7 @@ class QCaptcha
         $this->height = 70;
         $this->dic = CORE_DIR . "/system/captcha/dictionary/words-en.dic";
         $this->format = IMG_PNG;
-        $this->background = "captcha-back.png";
+        $this->background = "resources/captcha-back.png";
         $this->mp3dir = CORE_DIR . "/system/captcha/audio";
     }
 
@@ -81,10 +81,10 @@ class QCaptcha
     {
         $text = $this->GenWord();
         
-        $this->InitImage();
-        $this->SetBackground();
+        $this->InitImage();        
         $this->SetText($text);
-        $this->WaveImage();
+//        $this->WaveImage();
+        $this->SetBackground();
 
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -134,11 +134,11 @@ class QCaptcha
     public function GetCode()
     {
         $baseUrl = WEB_URL;
-        $textSize = $this->width - 50;
+        $textSize = $this->width - 40;
 
         $str = "<img src=\"{$baseUrl}/qxc/captcha/image\" width=\"{$this->width}\" height=\"{$this->height}\" alt=\"code\" style=\"display:block\" />";
-        $str .= "<input type=\"text\" name=\"secretcode\" style=\"width: {$textSize}px;margin-right:3px\" />";
-        $str .= "<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"50\" height=\"57\" id=\"voice\" align=\"middle\">";
+        $str .= "<input type=\"text\" name=\"secretcode\" style=\"float: left;width: {$textSize}px;margin: 15px 10px 5px 0\" />";
+        $str .= "<object style=\"float: left;margin-top: 10px;\" classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" width=\"35\" height=\"35\" id=\"voice\" align=\"middle\">";
         $str .= " <param name=\"allowScriptAccess\" value=\"sameDomain\" />";
         $str .= " <param name=\"allowFullScreen\" value=\"false\" />";
         $str .= " <param name=\"movie\" value=\"{$baseUrl}/qxc/captcha/audio/voice.swf\" />";
@@ -149,7 +149,7 @@ class QCaptcha
         $str .= " <param name=\"flashvars\" value=\"webUrl={$baseUrl}\" />";
         $str .= " <param name=\"wmode\" value=\"transparent\" />";
         $str .= " <param name=\"bgcolor\" value=\"#ffffff\" />";
-        $str .= "<embed src=\"{$baseUrl}/qxc/captcha/audio/voice.swf\" flashvars=\"webUrl={$baseUrl}\" loop=\"false\" menu=\"false\" quality=\"high\" scale=\"noscale\" wmode=\"transparent\" bgcolor=\"#ffffff\" width=\"50\" height=\"57\" name=\"voice\" align=\"middle\" allowScriptAccess=\"sameDomain\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\" />";
+        $str .= "<embed src=\"{$baseUrl}/qxc/captcha/audio/voice.swf\" flashvars=\"webUrl={$baseUrl}\" loop=\"false\" menu=\"false\" quality=\"high\" scale=\"noscale\" wmode=\"transparent\" bgcolor=\"#ffffff\" width=\"35\" height=\"35\" name=\"voice\" align=\"middle\" allowScriptAccess=\"sameDomain\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\" />";
         $str .= "</object>";
 
         return $str;
@@ -183,21 +183,34 @@ class QCaptcha
     }
 
     private function SetBackground()
-    {
-        $png = imagecreatefrompng("{$this->PATH}/{$this->background}");
-        list($width, $height) = getimagesize("{$this->PATH}/{$this->background}");
+    {  
+        $image = getimagesize("{$this->PATH}/{$this->background}");
+        list($width, $height) = $image;
 
-        imagecopyresampled($this->im, $png, 0, 0, 0, 0, $this->width, $this->height, $width, $height);
+        switch (array_pop($image))
+        {
+            case 'image/png':
+                $srcImg = imagecreatefrompng("{$this->PATH}/{$this->background}");
+                break;
+            default:
+                break;
+        }
+
+        if ($srcImg)
+        {
+            imagecopy($this->im, $srcImg, $this->width - $width, $this->height - $height, 0, 0, $width, $height);
+        }
     }
 
     private function SetText($text)
     {
         $length = strlen($text);
-        $x = ($this->width - ($length * 20)) / 2;
-        $y = round(($this->height / 12) * $this->scale);
+        $fontSize = round($this->width / $length) - 8;
+        $x = ($this->width - ($length * $fontSize)) / 2;
+        $y = round($this->height / $fontSize * 13);
 
         // Foreground color
-        $color = $this->colors[rnd(count($this->colors) - 1)];
+        $color = $this->colors[array_rand($this->colors)];
         $color = imagecolorallocate($this->im, $color[0], $color[1], $color[2]);
 
         // Font
@@ -210,31 +223,29 @@ class QCaptcha
             $fontsArray = $this->ReadDir("{$this->PATH}/fonts", "ttf");
 
             $fontfile = "{$this->PATH}/fonts/{$fontsArray[rand(0, count($fontsArray) - 1)]}";
-        }
-
-        $lettersMissing = 7 - strlen($text);
-        $fontSizefactor = 1 + ($lettersMissing * 0.09);
+        }       
 
         for ($i = 0; $i < $length; $i++)
         {
-            $degree   = rnd(-$this->maxRotation, $this->maxRotation);
-            $fontsize = rand($this->minSize, $this->maxSize) * $fontSizefactor;
+            $degree   = rand(-$this->maxRotation, $this->maxRotation);
+            $size = rand($fontSize - 5, $fontSize + 5);
 
-            $coords = imagettftext($this->im, $fontsize, $degree, $x, $y, $color, $fontfile, $text[$i]);
+            $coords = imagettftext($this->im, $size, $degree, $x, $y, $color, $fontfile, $text[$i]);
 
-            $x += ($coords[2] - $x) + ($this->scale - 5);
+            $x += ($coords[2] - $x) + $this->scale - 5;
         }
     }
 
     private function WaveImage()
     {
+        
         // X-axis wave generation
         $xp = $this->scale * 11 * rand(1,3);
         $k = rand(0, 100);
         
         for ($i = 0; $i < ($this->width * $this->scale); $i++)
         {
-            imagecopy($this->im, $this->im, $i-1, sin($k + $i / $xp) * ($this->scale*$this->Xamplitude), $i, 0, 1, $this->height * $this->scale);
+            imagecopy($this->im, $this->im, $i-1, sin($k + $i / $xp) * ($this->scale), $i, 0, 1, $this->height * $this->scale);
         }
 
         // Y-axis wave generation
@@ -242,7 +253,7 @@ class QCaptcha
         $yp = $this->scale * 11 * rand(1,2);
         for ($i = 0; $i < ($this->height*$this->scale); $i++)
         {
-            imagecopy($this->im, $this->im, sin($k+$i/$yp) * ($this->scale*$this->Yamplitude), $i-1, 0, $i, $this->width*$this->scale, 1);
+            imagecopy($this->im, $this->im, sin($k+$i/$yp) * ($this->scale), $i-1, 0, $i, $this->width*$this->scale, 1);
         }
     }
 
