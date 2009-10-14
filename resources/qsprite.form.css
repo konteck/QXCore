@@ -139,6 +139,7 @@ Copyright (c) Alex Movsisyan
 .top-aligned textarea,
 .top-aligned select,
 .top-aligned input[type="text"],
+.top-aligned input[type="file"],
 .top-aligned input[type="password"],
 .top-aligned input[type="select"],
 .top-aligned input[type="search"] {

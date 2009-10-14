@@ -16,7 +16,7 @@ class QRequest
         (
             'POST',
             'GET',
-            'FILE',
+            'FILES',
             'COOKIE',
             'SESSION'
         );
@@ -27,7 +27,7 @@ class QRequest
         {
             $objClone = clone $this;
             $objClone->method = $name;
-
+            
             return $objClone;
         }
 
@@ -107,13 +107,39 @@ class QRequest
     /**
      * @return Model Returns Model
      */
-    public function Files()
+    public function Files($name = "", $var = "")
     {
         $objClone = clone $this;
         $objClone->method = "FILES";
         $objClone->tempVar = $this->QXC->getGlobal($name, 'FILES');
 
+        if (!empty ($name))
+        {
+            if (!empty ($var))
+            {
+                return $objClone->tempVar[$var];
+            }
+
+            return $objClone->tempVar;
+        }
+
         return $objClone;
+    }
+
+    /**
+     * Move uploaded file to new location
+     * @return bool Returns bool
+     */
+    public function Move($name, $path)
+    {
+        if(empty ($this->tempVar))
+        {
+            $this->tempVar = $this->QXC->getGlobal(null, $this->method);
+        }
+
+        move_uploaded_file($this->tempVar[$name]['tmp_name'], $path);
+
+        return true;
     }
 
     /**
@@ -225,6 +251,18 @@ class QRequest
     public function Equals($string)
     {
         if(!empty ($this->tempVar) && $this->tempVar == $string)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function IsEmpty()
+    {
+        if(isset ($this->tempVar) && !empty ($this->tempVar))
         {
             return true;
         }

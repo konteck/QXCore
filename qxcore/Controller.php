@@ -17,7 +17,6 @@ abstract class Controller extends QXCore
 {	
     public $ModelName;
     public $ViewName;
-    private $ModuleName;
 
     function __construct()
     {

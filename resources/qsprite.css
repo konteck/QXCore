@@ -386,10 +386,11 @@ input[type='hidden']
     border:none;
 }
 
-.content table
+/* affect on flexigrid */
+/*.content table 
 {
     border-collapse:collapse;
-}
+}*/
 
 /*.content hr,
 .content p,
