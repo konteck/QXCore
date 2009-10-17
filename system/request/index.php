@@ -31,7 +31,7 @@ class QRequest
             return $objClone;
         }
 
-        throw new QException("{$name} not defined");
+        throw new QException("Method {$name} not defined");
     }
 
     public function __toString()
@@ -260,16 +260,23 @@ class QRequest
         }
     }
 
-    public function IsEmpty()
+    public function IsUploaded($name = "")
     {
-        if(isset ($this->tempVar) && !empty ($this->tempVar))
+        $this->tempVar = $this->QXC->getGlobal($name, 'FILES');        
+
+        if(!empty ($this->tempVar))
         {
-            return true;
-        }
-        else
-        {
+            $tmpArray = empty($name) ? current($this->tempVar) : $this->tempVar;
+            
+            if(is_uploaded_file($tmpArray['tmp_name']))
+            {
+                return true;
+            }
+
             return false;
         }
+
+        return false;
     }
 
     public function Trim($chars = "")
