@@ -67,12 +67,12 @@ class QDb
                 }
                 catch (PDOException $e)
                 {
-                    pr($e->getMessage()); // TODO write custom exception realization
+                    throw new QException($e->getMessage());
                 }
             }
             else
             {
-                throw new Exception($message, $code); // TODO write custome realization
+                throw new QException($message, $code); // TODO write custome realization
             }
         }
         else
@@ -83,9 +83,7 @@ class QDb
 
     // Punblic Methods
     public function Query($sql)
-    {
-        $sql = $this->PrepareQueryString($sql);
-        
+    {        
         if(func_num_args() > 1)
         {
             $args = func_get_args();
@@ -101,16 +99,12 @@ class QDb
     {
         $sql = (empty ($sql)) ? $this->CommandText : $sql;
 
-        $sql = $this->PrepareQueryString($sql);
-
         return $this->connObject->Query($sql, $this->Parameters);
     }
 
     public function ExecuteScalar($sql = "")
     {
         $sql = (empty ($sql)) ? $this->CommandText : $sql;
-
-        $sql = $this->PrepareQueryString($sql);
         
         return $this->connObject->Query($sql, $this->Parameters, true);
     }
@@ -132,11 +126,6 @@ class QDb
 
         return $tmpArray;
     }
-
-    private function PrepareQueryString($string)
-    {
-        return preg_replace('/@([\w]+)/', ':\1', $string);
-    }
 }
 
 class QDbConnection
@@ -153,7 +142,7 @@ class QDbConnection
 
     public function Open()
     {
-//        $this->dbObject->Initialize();
+    //        $this->dbObject->Initialize();
 
         $this->State = true;
     }
