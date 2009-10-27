@@ -492,3 +492,14 @@ input[type='hidden']
     clear: left;
 }
 
+/* Test layout
+---------------------------------------------------------------------------*/
+.outline * { outline: 2px dotted red; }
+.outline * * { outline: 2px dotted green; }
+.outline * * * { outline: 2px dotted orange; }
+.outline * * * * { outline: 2px dotted blue; }
+.outline * * * * * { outline: 1px solid red; }
+.outline * * * * * * { outline: 1px solid green; }
+.outline * * * * * * * { outline: 1px solid orange; }
+.outline * * * * * * * * { outline: 1px solid blue; }
+
