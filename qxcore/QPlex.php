@@ -56,10 +56,48 @@ class QPlex
 
         // Display erros, validation etc.
         $errorsArray = QXC()->getGlobal(null, "ERRORS");
+        $messagesArray = QXC()->getGlobal(null, "MESSAGES");
 
-        if (is_array($errorsArray) && (bool)count($errorsArray) && stristr($output, "<error>"))
+        if (is_array($errorsArray) || is_array($messagesArray) && stristr($output, "</body>"))
         {
-            $output = preg_replace("/<error>/", "<div class='error'>" . join("<br />", $errorsArray) . "</div>", $output);
+            $data = "<link rel=\"stylesheet\" href=\"{$web_url}/qxc/handler/jquery.growl.css\" type=\"text/css\" />";
+            $data .= "<script type=\"text/javascript\" src=\"{$web_url}/qxc/handler/jquery.growl.js\"></script>";
+
+            $data .= <<<DATA
+<script type="text/javascript">
+	//hljs.initHighlightingOnLoad();
+
+	$(document).ready(function()
+	{
+DATA;
+            if ((bool)count($errorsArray))
+            {
+                foreach ($errorsArray as $val)
+                {
+                    $data .= " jQuery.noticeAdd({
+                                    text: '{$val}',
+                                    stay: true
+                            }); ";
+                }
+            }
+
+            if ((bool)count($messagesArray))
+            {
+                foreach ($messagesArray as $val)
+                {
+                    $data .= " jQuery.noticeAdd({
+                                    text: '{$val}',
+                                    stay: true
+                            }); ";
+                }
+            }
+
+$data .= <<<DATA
+	});
+</script>
+DATA;
+
+            $output = preg_replace("/<\/body>/", "{$data}</body>", $output);
         }
 
         return $output;

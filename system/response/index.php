@@ -25,4 +25,9 @@ class QResponse
     {
         header($key, $value);
     }
+
+    public function Message($text)
+    {
+        $this->QXC->setGlobal(null, $text, "MESSAGES");
+    }
 }
