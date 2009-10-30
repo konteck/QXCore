@@ -150,7 +150,7 @@ class QCaptcha
         $str .= " <param name=\"wmode\" value=\"transparent\" />";
         $str .= " <param name=\"bgcolor\" value=\"#ffffff\" />";
         $str .= "<embed src=\"{$baseUrl}/qxc/captcha/audio/voice.swf\" flashvars=\"webUrl={$baseUrl}\" loop=\"false\" menu=\"false\" quality=\"high\" scale=\"noscale\" wmode=\"transparent\" bgcolor=\"#ffffff\" width=\"35\" height=\"35\" name=\"voice\" align=\"middle\" allowScriptAccess=\"sameDomain\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer\" />";
-        $str .= "</object>";
+        $str .= "</object><div style=\"clear:both\"></div>";
 
         return $str;
     }

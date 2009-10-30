@@ -65,8 +65,6 @@ class QPlex
 
             $data .= <<<DATA
 <script type="text/javascript">
-	//hljs.initHighlightingOnLoad();
-
 	$(document).ready(function()
 	{
 DATA;
@@ -75,7 +73,7 @@ DATA;
                 foreach ($errorsArray as $val)
                 {
                     $data .= " jQuery.noticeAdd({
-                                    text: '{$val}',
+                                    text: '" . addslashes($val) . "',
                                     stay: true
                             }); ";
                 }
@@ -86,7 +84,7 @@ DATA;
                 foreach ($messagesArray as $val)
                 {
                     $data .= " jQuery.noticeAdd({
-                                    text: '{$val}',
+                                    text: '" . addslashes($val) . "',
                                     stay: true
                             }); ";
                 }

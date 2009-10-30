@@ -2,8 +2,8 @@
 
 class QRequest
 {   
-    private $tempVar;
-    private $method;
+    private $tempVar = null;
+    private $method = null;
 
     function __construct()
     {
@@ -156,7 +156,7 @@ class QRequest
 
         $args = func_get_args();
 
-        if (!empty ($this->tempVar) && is_string($pattern))
+        if (!is_null($this->tempVar) && is_string($pattern))
         {
             if(strpos($pattern, "/") !== 0)
             {
