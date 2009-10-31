@@ -55,9 +55,8 @@ caption, th, td
 
 html
 {
-    background:white;
     color:black;
-    line-height:1;
+    /*line-height:1;*/
     font-family:arial,  sans-serif;
 }
 
@@ -186,11 +185,11 @@ cite, em, dfn
     font-style:italic;
 }
 
-code, kbd, samp, pre, tt, var, input[type='text'], input[type='password'], textarea
+/*code, kbd, samp, pre, tt, var, input[type='text'], input[type='password'], textarea
 {
     font-size:100%;
     font-family:mono-space, monospace;
-}
+}*/
 
 pre
 {
@@ -341,12 +340,12 @@ input[type='hidden']
     margin:1em 0 .5em;
 }
 
-.content h2
+/*.content h2
 {
     font-size:1.5em;
     line-height:1;
     margin:1.07em 0 .535em;
-}
+}*/
 
 .content h3
 {
@@ -386,38 +385,6 @@ input[type='hidden']
     border:none;
 }
 
-/* affect on flexigrid */
-/*.content table 
-{
-    border-collapse:collapse;
-}*/
-
-/*.content hr,
-.content p,
-.content ul,
-.content ol,
-.content dl,
-.content pre,
-.content address,
-.content table,
-.content form
-{
-    margin-bottom: 1.5em;
-}
-*/
-/*.content p+p
-{
-    margin-top:-.8em;
-}*/
-
-.content fieldset
-{
-    margin:1.6em 0;
-    padding:1.6em;
-}
-
-/* \*/
-
 .content legend
 {
     padding-left:.8em;
@@ -436,10 +403,10 @@ input[type='hidden']
     padding:.1em .2em;
 }
 
-.content input
+/*.content input
 {
     padding:.2em .1em;
-}
+}*/
 
 .content select
 {

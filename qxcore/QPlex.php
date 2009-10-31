@@ -58,7 +58,7 @@ class QPlex
         $errorsArray = QXC()->getGlobal(null, "ERRORS");
         $messagesArray = QXC()->getGlobal(null, "MESSAGES");
 
-        if (is_array($errorsArray) || is_array($messagesArray) && stristr($output, "</body>"))
+        if ((bool)$errorsArray || (bool)$messagesArray && stristr($output, "</body>"))
         {
             $data = "<link rel=\"stylesheet\" href=\"{$web_url}/qxc/handler/jquery.growl.css\" type=\"text/css\" />";
             $data .= "<script type=\"text/javascript\" src=\"{$web_url}/qxc/handler/jquery.growl.js\"></script>";
