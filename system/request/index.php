@@ -279,6 +279,16 @@ class QRequest
         return false;
     }
 
+    public function IsEmpty()
+    {
+        if(empty($this->tempVar))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public function Trim($chars = "")
     {
         if (empty ($chars))
