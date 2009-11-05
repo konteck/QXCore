@@ -47,7 +47,7 @@ if (! function_exists('pr'))
     /**
      * For debugging purprouses
      */
-    function pr($object, $terminate = false)
+    function pr($object, $terminate = true)
     {
         echo("<pre>");
 
@@ -138,14 +138,36 @@ class QXCore
         // Is in Debug mode
         define("DEBUG", (bool)$this->Config->Get('debug'));
 
+        // Compress output
+        define("GZIP_IT", strstr($_SERVER["HTTP_ACCEPT_ENCODING"], 'gzip') && (bool)$this->Config->Get('compress_output'));
+
         // Initialize Custom Error Handler
         set_error_handler(array($this->Exception, ErrorHandler), E_ALL & ~E_NOTICE);
 
         // Initialize Custom Exception Handler
 //        set_exception_handler(array($this->Exception, ExceptionHandler));
-     
-        // Load necessary controllers
-        $this->loadController();
+
+        if (GZIP_IT)
+        {
+            ob_start();
+            ob_implicit_flush(0);
+
+            // Load necessary controllers
+            $this->loadController();
+
+            $contents = ob_get_clean();
+
+            $gzip_contents = gzencode($contents, 9);
+
+            header('Content-Encoding: gzip');
+            header('Content-Length: ' . strlen($gzip_contents));
+            die($gzip_contents);
+        }
+        else
+        {
+            // Load necessary controllers
+            $this->loadController();
+        }
     }
 
     private function loadController()
