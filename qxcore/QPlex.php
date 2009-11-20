@@ -70,12 +70,13 @@ class QPlex
 DATA;
             if ((bool)count($errorsArray))
             {
-                foreach ($errorsArray as $val)
+                foreach ($errorsArray as $key=>$val)
                 {
                     $data .= " jQuery.noticeAdd({
                                     text: '" . addslashes($val) . "',
                                     stay: true
                             }); ";
+                    $data .= "$('#{$key}').css('border', '1px solid red'); ";
                 }
             }
 

@@ -42,6 +42,10 @@ Copyright (c) Alex Movsisyan
     font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,Sans-Serif;
 }
 
+.form label em {
+    color: #f61b30;
+}
+
 .form textarea,
 .form input[type="file"],
 .form input[type="text"],
