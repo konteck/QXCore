@@ -12,6 +12,7 @@ class QDb
     public $Connection;
     public $CommandText = "";
     public $Parameters = array();
+    public $Cache = null;
     
     private $connObject;
     
@@ -83,21 +84,41 @@ class QDb
 
     // Punblic Methods
     public function Query($sql)
-    {        
+    {
         if(func_num_args() > 1)
         {
             $args = func_get_args();
+
+            if ($this->Cache)
+            {
+                $this->Cache = 0;
+                
+                return $this->GetCachedData($sql, $args[1]);
+            }
+
             return $this->connObject->Query($sql, $args[1]);
         }
-        else
+
+        if ($this->Cache)
         {
-            return $this->connObject->Query($sql, $this->Parameters);
+            $this->Cache = 0;
+            
+            return $this->GetCachedData($sql, $this->Parameters);
         }
+
+        return $this->connObject->Query($sql, $this->Parameters);
     }
 
     public function ExecuteQuery($sql = "")
-    {
-        $sql = (empty ($sql)) ? $this->CommandText : $sql;
+    {        
+        $sql = (empty ($sql)) ? $this->CommandText : $sql;        
+
+        if ($this->Cache)
+        {
+            $this->Cache = 0;
+            
+            return $this->GetCachedData($sql, $this->Parameters);
+        }
 
         return $this->connObject->Query($sql, $this->Parameters);
     }
@@ -105,8 +126,22 @@ class QDb
     public function ExecuteScalar($sql = "")
     {
         $sql = (empty ($sql)) ? $this->CommandText : $sql;
+
+        if ($this->Cache)
+        {
+            $this->Cache = 0;
+            
+            return $this->GetCachedData($sql, $this->Parameters);
+        }
         
         return $this->connObject->Query($sql, $this->Parameters, true);
+    }
+
+    public function Cache($timeout)
+    {
+        $this->Cache = (int)$timeout;
+
+        return $this;
     }
 
     // Private Methods
@@ -125,6 +160,20 @@ class QDb
         }
 
         return $tmpArray;
+    }
+
+    private function GetCachedData($query, $args = array())
+    {
+        $hash = md5($query . serialize($args));
+
+        if(!$arr = $this->QXC->Cache->Get($hash))
+        {
+            $arr = $this->connObject->Query($query, $args);
+
+            $this->QXC->Cache->Set($hash, $arr, $this->Cache);
+        }
+
+        return $arr;
     }
 }
 

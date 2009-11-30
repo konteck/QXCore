@@ -4,10 +4,11 @@ class QModule
 {
     private $moduleName;
     private $modulePath;
+    private $QXC;
     
     function __construct()
     {
-        
+        $this->QXC = QXC();
     }
 
     // Private Methods
@@ -36,23 +37,22 @@ class QModule
     protected function __get($name)
     {
         if (isset($name) && ctype_alnum($name))
-        {
+        {            
             $this->moduleName = strtolower($name);
             
             $this->loadModule();
 
-            $qname = "{$name}";
+            $qname = "{$name}";           
 
-            $this->$name = new $qname(QXC());
-            $this->$name->QXC = QXC();
+            $this->$name = new $qname($this->QXC);
+            $this->$name->QXC = $this->QXC;
             $this->$name->PATH = dirname($this->modulePath);
 
             return $this->$name;
         }
         else
         {
-            // TODO Add exception handler
-            return '';
+            throw new QException("Module name contain unacceptable characters");
         }
     }
 }

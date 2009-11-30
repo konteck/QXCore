@@ -9,6 +9,7 @@
  * @property QCaptcha       $Captcha
  * @property QRequest       $Request
  * @property QResponse      $Response
+ * @property QCache         $Cache
  * @property View           $View
  * @property Model          $Model
  * @property Module         $Module
