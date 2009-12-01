@@ -35,7 +35,7 @@ define('__NOTEMPTY__'           , '[^\s]+');
 //--
 
 require_once (CORE_DIR . '/qxcore/Controller.php');
-require_once (CORE_DIR . '/qxcore/Localization.php');
+//require_once (CORE_DIR . '/qxcore/Localization.php'); // TODO: Implement
 
 if (!class_exists("QPlex"))
 {

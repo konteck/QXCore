@@ -78,7 +78,7 @@ abstract class Model extends QXCore
 
         $this->modelObject = new $mName();
         $this->modelObject->Set($this->varsArray);
-        $this->modelObject->varsArray = &$this->modelObject->Db->Parameters; // TODO: I need this?
+//        $this->modelObject->varsArray = &$this->modelObject->Db->Parameters; // TODO: I need this?
         
         return $this;
     }
