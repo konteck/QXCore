@@ -326,7 +326,7 @@ class QRequest
 
     private function cleanString($input)
     {
-        $input = htmlentities($input, ENT_QUOTES, 'UTF-8');
+        $input = htmlentities($input);
 
         if(get_magic_quotes_gpc())
         {
