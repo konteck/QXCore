@@ -13,7 +13,7 @@ class Toolbar
     {
         $this->Initialize();
         
-        $str = '<script type="text/javascript" src="{$web_url}/qxc/toolbar/handler/toolbar.js"></script>';
+//        $str = '<script type="text/javascript" src="{$web_url}/qxc/toolbar/handler/toolbar.js"></script>';
         $str .= "\n";
         $str .= '<link rel="stylesheet" href="{$web_url}/qxc/toolbar/toolbar.css" type="text/css" />';
         $str .= "\n";

@@ -1,15 +1,13 @@
 <?php
 
-abstract class QPDODriverBase extends PDO
+class PDOBase extends PDO
 {
     private $QDB;
     private $DSN;
 
-    function  __construct($qdb)
-    {
-        $this->QDB = $qdb;
-        
-        $this->DSN = $this->GenerateDSN();
+    function  __construct($dsn)
+    {        
+        $this->DSN = $dsn;
 
         parent::__construct($this->DSN, $this->QDB->User, $this->QDB->Password);
 
@@ -63,6 +61,7 @@ abstract class QPDODriverBase extends PDO
     }
 
     /**
+     * TODO: Remove, not needed anymore
      * @return array
      */
     protected function GenerateDSN()

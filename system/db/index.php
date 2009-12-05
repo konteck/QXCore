@@ -23,19 +23,7 @@ class QDb
         {            
             $connStr = $qxc->Config->Get('connection_string');
 
-            if(!empty ($connStr))
-            {
-                $dbArray = $this->ParseConnectionString($connStr);
-
-                $this->Driver = $dbArray['driver'];
-                $this->Server = $dbArray['server'];
-                $this->Port = $dbArray['port'];
-                $this->User = $dbArray['user'];
-                $this->Password = $dbArray['password'];
-                $this->Database = $dbArray['database'];
-                $this->Encoding = $dbArray['encoding'];
-            }
-            else
+            if(empty ($connStr))
             {
                 $this->Driver = $qxc->Config->Get('driver');
                 $this->Server = $qxc->Config->Get('server');
@@ -45,38 +33,21 @@ class QDb
                 $this->Database = $qxc->Config->Get('database');
             }
 
-            $driverName = strtolower($this->Driver);
-
-            define("USE_PDO", class_exists(PDO) && in_array(strtolower($this->Driver), PDO::getAvailableDrivers()));
+            define("USE_PDO", class_exists(PDO));
 
             if (USE_PDO)
             {
                 include_once (CORE_DIR . "/system/db/PDOBase.php");
 
-                // Load required driver
-
-                $driverPath = CORE_DIR . "/system/db/drivers/{$driverName}/{$driverName}.pdo." . CORE_PHP_EXT;
-
-                if (file_exists($driverPath))
+                try
                 {
-                    include_once ($driverPath);
+                    self::$connObject = new PDOBase($connStr);
 
-                    $className = "Q" . $this->Driver . "Driver";
-
-                    try
-                    {
-                        self::$connObject = new $className($this);
-
-                        $this->Connection = new QDbConnection(&self::$connObject);
-                    }
-                    catch (PDOException $e)
-                    {
-                        throw new QException($e->getMessage());
-                    }
+                    $this->Connection = new QDbConnection(&self::$connObject);
                 }
-                else
+                catch (PDOException $e)
                 {
-                    throw new QException("Selected PDO driver doesn;t exist"); // TODO write custome realization
+                    throw new QException($e->getMessage());
                 }
             }
             else
@@ -148,7 +119,7 @@ class QDb
         return $this;
     }
 
-    // Private Methods
+    // Private Methods TODO: remove, not needed anymore
     /**
      * @return array
      */

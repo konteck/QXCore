@@ -157,7 +157,7 @@ class QXCore
 
             $contents = ob_get_clean();
 
-            $gzip_contents = gzencode($contents, 9);
+            $gzip_contents = gzencode($contents, 5);
 
             header('Content-Encoding: gzip');
             header('Content-Length: ' . strlen($gzip_contents));
