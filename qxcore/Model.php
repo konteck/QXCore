@@ -37,6 +37,7 @@ abstract class Model extends QXCore
 
     public function ClearVars()
     {
+        $this->Db->Parameters = array();
         $this->modelObject->Db->Parameters = array();
     }
 
@@ -90,6 +91,7 @@ class QModel extends Model
         if (is_callable(array($this->modelObject, $name)))
         {
             $result = call_user_func_array(array($this->modelObject, $name), $arguments);
+            call_user_func_array(array($this->modelObject, 'ClearVars'), $arguments);
         }
         else
         {
