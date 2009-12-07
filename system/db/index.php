@@ -47,7 +47,7 @@ class QDb
                 }
                 catch (PDOException $e)
                 {
-                    throw new QException($e->getMessage());
+                    throw new QException("PDO Exception: " . $e->getMessage());
                 }
             }
             else

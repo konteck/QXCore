@@ -29,24 +29,31 @@ class PDOBase extends PDO
 
     public function Query($sql, $params = array(), $single = false)
     {
-        $stmt = $this->prepare($sql);        
+        try
+        {
+            $stmt = $this->prepare($sql);
 
-        if(is_array($params) && count($params) > 0)
-        {            
-            $stmt->execute($params);
-        }
-        else
-        {
-            $stmt->execute();
-        }
+            if(is_array($params) && count($params) > 0)
+            {
+                $stmt->execute($params);
+            }
+            else
+            {
+                $stmt->execute();
+            }
 
-        if ($single)
-        {
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($single)
+            {
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            }
+            else
+            {
+                 return $stmt->fetchAll();
+            }
         }
-        else
+        catch (PDOException $e)
         {
-            return $stmt->fetchAll();
+            throw new QException("PDO Exception: " . $e->getMessage());
         }
     }
 

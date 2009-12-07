@@ -121,7 +121,7 @@ class QCaptcha
 
         $text = (string)$this->QXC->Request->Session('qxc_captcha_text');
 
-        if (!empty ($text) && $string == $text)
+        if (!empty ($text) && strtolower($string) == strtolower($text))
         {
             return true;
         }
