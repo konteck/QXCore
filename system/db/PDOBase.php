@@ -42,6 +42,13 @@ class PDOBase extends PDO
                 $stmt->execute();
             }
 
+            $result = $stmt->errorInfo();
+
+            if ($result[1] > 0)
+            {
+                throw new QException($result[2]);
+            }
+
             if ($single)
             {
                 return $stmt->fetch(PDO::FETCH_ASSOC);
