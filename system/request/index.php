@@ -142,6 +142,18 @@ class QRequest
         return true;
     }
 
+    public function Delete($name)
+    {
+        if(empty ($this->tempVar))
+        {
+            $this->tempVar = $this->QXC->getGlobal(null, $this->method);
+        }
+
+        @unlink($this->tempVar[$name]['tmp_name']);
+
+        return true;
+    }
+
     /**
      * TODO Optimize algorithm
      * @param name[optional]
