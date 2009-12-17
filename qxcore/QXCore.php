@@ -192,23 +192,30 @@ class QXCore
         else
         {
             throw new QWebException("404 Page Not Found",
-                "/controllers/{$cFileName} - doesn't exists!");
+                "<strong>/controllers/{$cFileName}</strong> - controller doesn't exists!");
         }
 
         include_once ($cPath);
 
         $controller = new $cName();
 
-        if(count($this->queryStringArray) > 1)
+        // Detect called controller method name
+        $methodName = $this->getPart(1);            
+
+        if (empty($methodName))
         {
-            $methodName = $this->getPart(1);            
+            $methodName = "Main";
+
+            array_shift($this->queryStringArray);
+        }
+        else
+        {
+            array_shift($this->queryStringArray);
+            array_shift($this->queryStringArray);
         }
 
-        if(!empty($methodName) && is_callable(array($controller, $methodName)))
+        if(is_callable(array($controller, $methodName)))
         {
-            array_shift($this->queryStringArray);
-            array_shift($this->queryStringArray);
-
             if(empty ($controller->ViewName))
             {
                 // Automatically set View name
@@ -217,21 +224,10 @@ class QXCore
             
             call_user_func_array(array($controller, $methodName), $this->queryStringArray);
         }
-        else if(is_callable(array($controller, "Main")))
-        {
-            array_shift($this->queryStringArray);
-
-            if(empty ($controller->ViewName))
-            {
-                $controller->ViewName = ($cName == CORE_MAIN_CONTROLLER) ? strtolower("main") : strtolower("{$cName}/main");
-            }
-            
-            call_user_func_array(array($controller, "Main"), $this->queryStringArray);
-        }
         else
         {
             throw new QWebException("404 Page Not Found",
-                "/controllers/{$cName}/{$methodName} - doesn't exists!");
+                "<strong>/controllers/{$cName}::{$methodName}</strong> - method doesn't exists!");
         }
     }
 
@@ -294,7 +290,8 @@ class QXCore
 
     private function ParseURI()
     {
-        $str = $_SERVER['REQUEST_URI'];
+        $scheme = parse_url(WEB_URL);
+        $str = str_replace($scheme['path'], "", $_SERVER['REQUEST_URI']);
             
         $pos = strpos($str, "?");
 

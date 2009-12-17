@@ -43,10 +43,11 @@ class QModule
             $this->loadModule();
 
             $qname = "{$name}";           
+            $path = dirname($this->modulePath);
 
-            $this->$name = new $qname($this->QXC);
+            $this->$name = new $qname($this->QXC, $path);
             $this->$name->QXC = $this->QXC;
-            $this->$name->PATH = dirname($this->modulePath);
+            $this->$name->PATH = $path;
 
             return $this->$name;
         }
