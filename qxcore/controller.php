@@ -72,7 +72,7 @@ abstract class Controller extends QXCore
         // TODO: Remove this checking - not really need
         $vName = (empty($this->ViewName) ? get_class($this) : $this->ViewName);
 
-        include_once (CORE_DIR . '/qxcore/View.php');
+        include_once (CORE_DIR . '/qxcore/view.php');
 
         return new QView($vName);
     }
@@ -81,7 +81,7 @@ abstract class Controller extends QXCore
     {
         $mName = (empty($name) ? (empty($this->ModelName) ? get_class($this) : $this->ModelName) : $name);
 
-        include_once (CORE_DIR . '/qxcore/Model.php');
+        include_once (CORE_DIR . '/qxcore/model.php');
 
         $model = new QModel($mName);
 

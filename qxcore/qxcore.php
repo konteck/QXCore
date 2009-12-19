@@ -34,12 +34,12 @@ define('__NOTEMPTY__'           , '[^\s]+');
 
 //--
 
-require_once (CORE_DIR . '/qxcore/Controller.php');
-//require_once (CORE_DIR . '/qxcore/Localization.php'); // TODO: Implement
+require_once (CORE_DIR . '/qxcore/controller.php');
+//require_once (CORE_DIR . '/qxcore/localization.php'); // TODO: Implement
 
 if (!class_exists("QPlex"))
 {
-    require_once (CORE_DIR . '/qxcore/QPlex.php');
+    require_once (CORE_DIR . '/qxcore/qplex.php');
 }
 
 if (! function_exists('pr'))
@@ -307,7 +307,7 @@ class QXCore
 
     private function loadModule()
     {
-        include_once (CORE_DIR . '/qxcore/Module.php');
+        include_once (CORE_DIR . '/qxcore/module.php');
 
         return new QModule();
     }
