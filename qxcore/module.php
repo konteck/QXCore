@@ -38,7 +38,7 @@ class QModule
     {
         if (isset($name) && ctype_alnum($name))
         {            
-            $this->moduleName = strtolower($name);
+            $this->moduleName = $name;
             
             $this->loadModule();
 
