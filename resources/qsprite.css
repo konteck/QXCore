@@ -456,7 +456,7 @@ input[type='hidden']
 }
 
 .content br {
-    clear: left;
+    /*clear: left;*/
 }
 
 /* Test layout
