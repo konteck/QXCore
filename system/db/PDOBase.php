@@ -73,19 +73,4 @@ class PDOBase extends PDO
     {
         $this->query("SET NAMES {$value}");
     }
-
-    /**
-     * TODO: Remove, not needed anymore
-     * @return array
-     */
-    protected function GenerateDSN()
-    {
-        // Generate PHP PDO suitable
-        $str = strtolower($this->QDB->Driver) . ":";
-        $str .= empty($this->QDB->Server) ? "host=localhost;" : "host={$this->QDB->Server};";
-        $str .= empty($this->QDB->Port) ? "" : "port={$this->QDB->Port};";
-        $str .= empty($this->QDB->Database) ? "" : "dbname={$this->QDB->Database};";
-
-        return $str;
-    }
 }

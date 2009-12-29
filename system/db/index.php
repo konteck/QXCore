@@ -119,24 +119,6 @@ class QDb
         return $this;
     }
 
-    // Private Methods TODO: remove, not needed anymore
-    /**
-     * @return array
-     */
-    private function ParseConnectionString($connStr)
-    {
-        $matchArray = preg_split("/;/", $connStr);
-
-        foreach ($matchArray as $val)
-        {
-            list ($dbKey, $dbVal) = split("=", $val);
-            
-            $tmpArray[strtolower($dbKey)] = $dbVal;
-        }
-
-        return $tmpArray;
-    }
-
     private function GetCachedData($query, $args = array())
     {
         $hash = md5($query . serialize($args));

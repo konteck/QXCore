@@ -123,13 +123,3 @@ class QModel extends Model
         return $this->modelObject->Db->Parameters[":{$name}"];
     }
 }
-
-// TODO: Remove - not really needed
-class QModelVars extends Model
-{    
-    function __construct($array)
-    {
-        $this->varsArray = &$array;
-    }
-}
-
