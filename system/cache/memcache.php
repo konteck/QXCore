@@ -11,7 +11,7 @@ class QMemcache
     private $host;
     private $port;
     
-    function __construct($host = "localhost", $port = 11211, $persistance = false)
+    function __construct($host = "127.0.0.1", $port = 11211, $persistance = false)
     {
         $this->host = $host;
         $this->port = $port;
