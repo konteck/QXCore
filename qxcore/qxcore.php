@@ -22,7 +22,7 @@ define('CORE_PHP_EXT'           , 'php');
 define('CORE_VIEW_EXT'          , 'html');
 define('CORE_CONFIG_NAME'       , 'web');
 define('CORE_CONFIG_EXTENSION'  , 'config.xml');
-define('CORE_MAIN_CONTROLLER'   , 'Main');
+define('CORE_MAIN_CONTROLLER'   , 'main');
 define('CORE_VER'               , '0.92');
 
 // Regex predefined patterns
@@ -55,7 +55,7 @@ if (! function_exists('pr'))
 
         if ($terminate)
         {
-            die("Exec: " . T());
+            die("PET: " . T());
         }
 
         echo("</pre>");
@@ -175,44 +175,37 @@ class QXCore
         if ((bool)count($this->queryStringArray))
         {
             $cName = $this->getPart(0);
+            $methodName = $this->getPart(1);
+
+            // Remove first segment
+            array_shift($this->queryStringArray);
         }
         
         $cName = (is_null($cName) || empty ($cName)) ? CORE_MAIN_CONTROLLER : strtolower(trim($cName));
+        $methodName = (is_null($methodName) || empty ($methodName)) ? "Main" : trim($methodName);
 
         $cFileName = "{$cName}." . CORE_PHP_EXT;
 
         if (file_exists(WEB_DIR . "/controllers/{$cFileName}"))
         {
-            $cPath = WEB_DIR . "/controllers/{$cFileName}";
+            include_once (WEB_DIR . "/controllers/{$cFileName}");
+
+            array_shift($this->queryStringArray);
         }
         else if(file_exists(CORE_DIR . "/controllers/{$cFileName}"))
         {
-            $cPath = CORE_DIR . "/controllers/{$cFileName}";
-        }
-        else
-        {
-            throw new QWebException("404 Page Not Found",
-                "<strong>/controllers/{$cFileName}</strong> - controller doesn't exists!");
-        }
-
-        include_once ($cPath);
-
-        $controller = new $cName();
-
-        // Detect called controller method name
-        $methodName = $this->getPart(1);            
-
-        if (empty($methodName))
-        {
-            $methodName = "Main";
+            include_once (CORE_DIR . "/controllers/{$cFileName}");
 
             array_shift($this->queryStringArray);
         }
         else
         {
-            array_shift($this->queryStringArray);
-            array_shift($this->queryStringArray);
-        }
+            include_once (WEB_DIR . "/controllers/" . CORE_MAIN_CONTROLLER . CORE_PHP_EXT);
+
+            $methodName = $cName;
+        }        
+
+        $controller = new $cName();          
 
         if(is_callable(array($controller, $methodName)))
         {
