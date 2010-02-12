@@ -203,7 +203,8 @@ class QXCore
             include_once (WEB_DIR . "/controllers/" . CORE_MAIN_CONTROLLER . "." . CORE_PHP_EXT);
 
             $methodName = $cName;
-        }        
+            $cName = "Main";
+        }
 
         $controller = new $cName();          
 
